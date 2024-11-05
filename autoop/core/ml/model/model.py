@@ -3,29 +3,47 @@ import numpy as np
 from typing import Dict, Any
 from abc import ABC, abstractmethod
 from pydantic import BaseModel, PrivateAttr
+from copy import deepcopy
 
 class Model(BaseModel, ABC):
     """
     Abstract base class for all learning models.
 
-    Contains the standard fit and predict methods, and can use Artifact-like functionality
-    by internally managing an Artifact instance.
-
-    _parameters (Dict): a dictionary that stores model-specific parameters.
-    _hyperparameters (Dict): a dictionary that stores model-specific hyperparameters.
+    Contains the standard fit and predict methods, and uses Artifact-like 
+    functionality by internally managing an Artifact instance.
+    
+    Attributes:
+        _parameters (Dict): Stores model-specific parameters.
+        _hyperparameters (Dict): Stores model-specific hyperparameters.
+        _artifact (Artifact): Manages the artifact for the model.
     """
 
     _parameters: Dict = PrivateAttr(default_factory=dict)
     _hyperparameters: Dict = PrivateAttr(default_factory=dict)
     _artifact: Artifact = PrivateAttr()
 
-    def __init__(self, name: str, asset_path: str, version: str, **data):
+    def __init__(
+        self, 
+        name: str, 
+        asset_path: str, 
+        version: str, 
+        **data: Any
+    ) -> None:
+        """
+        Initializes the Model with an associated Artifact.
+
+        Args:
+            name (str): Name of the model artifact.
+            asset_path (str): Path for storing the artifact.
+            version (str): Version of the model.
+            **data (Any): Additional data passed to the BaseModel initializer.
+        """
         super().__init__(**data)
         self._artifact = Artifact(
             name=name,
             asset_path=asset_path,
             version=version,
-            data=b"",  # This would be model binary data when saved
+            data=b"",  # Placeholder for model binary data
             metadata={},
             type="model",
             tags=["machine_learning"]
@@ -34,16 +52,22 @@ class Model(BaseModel, ABC):
     @property
     def parameters(self) -> Dict:
         """
-        Returns a copy of the model parameters.
+        Returns a deepcopy of the model parameters.
+
+        Returns:
+            Dict: Deepcopy of the model parameters.
         """
-        return self._parameters.copy()
+        return deepcopy(self._parameters)
 
     @property
     def hyperparameters(self) -> Dict:
         """
-        Returns a copy of the model hyperparameters.
+        Returns a deepcopy of the model hyperparameters.
+
+        Returns:
+            Dict: Deepcopy of the model hyperparameters.
         """
-        return self._hyperparameters.copy()
+        return deepcopy(self._hyperparameters)
 
     @abstractmethod
     def fit(self, observations: np.ndarray, ground_truth: np.ndarray) -> None:
@@ -51,8 +75,8 @@ class Model(BaseModel, ABC):
         Fits the model to the provided training data.
 
         Args:
-            observations (np.ndarray): Feature matrix of shape (n_samples, n_features).
-            ground_truth (np.ndarray): Target vector of shape (n_samples,).
+            observations (np.ndarray): Feature matrix (n_samples, n_features).
+            ground_truth (np.ndarray): Target vector (n_samples,).
         """
         pass
 
@@ -62,10 +86,10 @@ class Model(BaseModel, ABC):
         Predicts the values for the provided observations.
 
         Args:
-            observations (np.ndarray): Feature matrix of shape (n_samples, n_features).
+            observations (np.ndarray): Feature matrix (n_samples, n_features).
 
         Returns:
-            np.ndarray: Predicted values of shape (n_samples,).
+            np.ndarray: Predicted values (n_samples,).
         """
         pass
 
@@ -74,7 +98,7 @@ class Model(BaseModel, ABC):
         Save the model using the Artifact class.
 
         Args:
-            directory (str): The directory where the model should be saved.
+            directory (str): Directory where the model should be saved.
         """
         model_data = {
             'parameters': self._parameters,
@@ -88,8 +112,8 @@ class Model(BaseModel, ABC):
         Load the model using the Artifact class.
 
         Args:
-            directory (str): The directory where the model is stored.
-            artifact_id (str): The unique ID of the model artifact to be loaded.
+            directory (str): Directory where the model is stored.
+            artifact_id (str): Unique ID of the model artifact to be loaded.
         """
         self._artifact.asset_path = f"{directory}/{artifact_id}.bin"
         loaded_data = self._artifact.read()
@@ -102,7 +126,8 @@ class Model(BaseModel, ABC):
         Set the model parameters.
 
         Args:
-            **params (Any): Arbitrary keyword arguments representing model parameters.
+            **params (Any): Arbitrary keyword arguments representing model 
+                parameters.
         """
         for key, value in params.items():
             self._parameters[key] = value
@@ -112,7 +137,8 @@ class Model(BaseModel, ABC):
         Set the model hyperparameters.
 
         Args:
-            **hyperparams (Any): Arbitrary keyword arguments representing hyperparameters.
+            **hyperparams (Any): Arbitrary keyword arguments representing 
+                hyperparameters.
         """
         for key, value in hyperparams.items():
             self._hyperparameters[key] = value

@@ -43,6 +43,38 @@ class Artifact(ABC):
         self._tags = tags if tags is not None else []
         self._id = str(next(Artifact._id_iter))
 
+    @property
+    def name(self) -> str:
+        return self._name
+
+    @property
+    def asset_path(self) -> str:
+        return self._asset_path
+
+    @property
+    def version(self) -> str:
+        return self._version
+
+    @property
+    def data(self) -> bytes:
+        return self._data
+
+    @property
+    def metadata(self) -> dict:
+        return self._metadata
+
+    @property
+    def type(self) -> str:
+        return self._type
+
+    @property
+    def tags(self) -> list:
+        return self._tags
+
+    @property
+    def id(self) -> str:
+        return self._id
+    
     def save1(self, directory: str) -> None:
         """
         Saves the artifact data to a specified directory. If the directory does

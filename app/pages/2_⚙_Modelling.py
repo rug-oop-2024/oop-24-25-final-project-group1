@@ -18,14 +18,13 @@ automl = AutoMLSystem.get_instance()
 
 datasets = automl.registry.list(type="dataset")
 
-dataset_names = [dataset.name for dataset in datasets]
+dataset_names = [dataset._name for dataset in datasets]
 selected_dataset_name = st.selectbox("Select a dataset", dataset_names)
 
 if selected_dataset_name:
-    selected_dataset = next(dataset for dataset in datasets if dataset.name == selected_dataset_name)
+    selected_dataset = next(dataset for dataset in datasets if dataset._name == selected_dataset_name)
     st.write(f"Selected dataset: {selected_dataset_name}")
     
-    # Use your Dataset class to detect feature types
     features = detect_feature_types(selected_dataset)
     feature_names = [feature.name for feature in features]
     input_features = st.multiselect("Select input features", feature_names)
