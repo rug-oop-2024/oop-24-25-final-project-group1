@@ -28,12 +28,13 @@ if selected_dataset_name:
     # Use your Dataset class to detect feature types
     features = detect_feature_types(selected_dataset)
     feature_names = [feature.name for feature in features]
-
     input_features = st.multiselect("Select input features", feature_names)
-    target_feature = st.selectbox("Select target feature", feature_names)
+    available_target_features = [feature for feature in feature_names if feature not in input_features]
+    
+    target_features = st.selectbox("Select target feature", available_target_features)
 
-    if input_features and target_feature:
-        target_feature_type = next(feature for feature in features if feature.name == target_feature).type
+    if input_features and target_features:
+        target_feature_type = next(feature for feature in features if feature.name == target_features).type
         if target_feature_type in ["int", "float"]:
             task_type = "regression"
         else:
@@ -41,3 +42,4 @@ if selected_dataset_name:
         
         st.write(f"Detected task type: {task_type}")
 
+    

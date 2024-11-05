@@ -15,13 +15,13 @@ def detect_feature_types(dataset: Dataset) -> List[Feature]:
         List[Feature]: A list of Feature objects with their detected types (categorical or numerical).
     """
     
-    if dataset.data is None:
+    if dataset._data is None:
         raise ValueError("The Dataset object does not contain any valid data. Please ensure that the dataset is properly initialized with data.")
 
-    if not isinstance(dataset.data, (str, bytes)):
+    if not isinstance(dataset._data, (str, bytes)):
         raise TypeError("The Dataset object's data should be of type str or bytes.")
     
-    csv_data = dataset.data.decode("utf-8")
+    csv_data = dataset._data.decode("utf-8")
     data = pd.read_csv(io.StringIO(csv_data))
     features = []
 
