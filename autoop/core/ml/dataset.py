@@ -24,5 +24,5 @@ class Dataset(Artifact):
     
     def save(self, data: pd.DataFrame) -> bytes:
         bytes = data.to_csv(index=False).encode()
-        return super().save(bytes)
+        return super().save1(bytes)
     

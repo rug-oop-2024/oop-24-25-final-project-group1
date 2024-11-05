@@ -80,12 +80,10 @@ Pipeline(
         input_results = preprocess_features(self._input_features, self._dataset)
         for (feature_name, data, artifact) in input_results:
             self._register_artifact(feature_name, artifact)
-        # Get the input vectors and output vector, sort by feature name for consistency
         self._output_vector = target_data
         self._input_vectors = [data for (feature_name, data, artifact) in input_results]
 
     def _split_data(self):
-        # Split the data into training and testing sets
         split = self._split
         self._train_X = [vector[:int(split * len(vector))] for vector in self._input_vectors]
         self._test_X = [vector[int(split * len(vector)):] for vector in self._input_vectors]
@@ -109,16 +107,29 @@ Pipeline(
             result = metric.evaluate(predictions, Y)
             self._metrics_results.append((metric, result))
         self._predictions = predictions
-
+        
     def execute(self):
         self._preprocess_features()
         self._split_data()
         self._train()
         self._evaluate()
+
+        train_X = self._compact_vectors(self._train_X)
+        train_Y = self._train_y
+        train_metrics_results = []
+        train_predictions = self._model.predict(train_X)
+        for metric in self._metrics:
+            train_result = metric.evaluate(train_predictions, train_Y)
+            train_metrics_results.append((metric, train_result))
+
         return {
-            "metrics": self._metrics_results,
+            "training_metrics": train_metrics_results,
+            "evaluation_metrics": self._metrics_results,
             "predictions": self._predictions,
         }
+
+
+   
         
 
     

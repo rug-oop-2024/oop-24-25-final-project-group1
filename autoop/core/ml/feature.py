@@ -1,12 +1,29 @@
+class Feature:
+    def __init__(self, name: str, type: str):
+        """
+        Represents a feature in a dataset.
 
-from pydantic import BaseModel, Field
-from typing import Literal
-import numpy as np
+        :param name: The name of the feature (e.g., column name in the DataFrame).
+        :param type: The type of the feature (e.g., "numerical", "categorical").
+        """
+        self.name = name
+        self.type = type
 
-from autoop.core.ml.dataset import Dataset
+    def __repr__(self):
+        return f"Feature(name={self.name}, type={self.type})"
 
-class Feature(BaseModel):
-    # attributes here
+    def is_numerical(self) -> bool:
+        """
+        Checks if the feature is numerical.
 
-    def __str__(self):
-        raise NotImplementedError("To be implemented.")
+        :return: True if the feature is numerical, otherwise False.
+        """
+        return self.type == "numerical"
+
+    def is_categorical(self) -> bool:
+        """
+        Checks if the feature is categorical.
+
+        :return: True if the feature is categorical, otherwise False.
+        """
+        return self.type == "categorical"

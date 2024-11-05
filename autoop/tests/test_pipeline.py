@@ -6,7 +6,10 @@ from autoop.core.ml.pipeline import Pipeline
 from autoop.core.ml.dataset import Dataset
 from autoop.core.ml.feature import Feature
 from autoop.functional.feature import detect_feature_types
-from autoop.core.ml.model.regression import MultipleLinearRegression
+from autoop.core.ml.model.regression.mulitple_linear_regression import MultipleLinearRegression
+from autoop.core.ml.model.regression.decision_tree import DecisionTreeRegressionModel
+from autoop.core.ml.model.regression.lasso_regression import LassoRegressionModel
+
 from autoop.core.ml.metric import MeanSquaredError
 
 class TestPipeline(unittest.TestCase):
@@ -25,7 +28,8 @@ class TestPipeline(unittest.TestCase):
         self.features = detect_feature_types(self.dataset)
         self.pipeline = Pipeline(
             dataset=self.dataset,
-            model=MultipleLinearRegression(),
+            #model=MultipleLinearRegression(),
+            model=LassoRegressionModel(),
             input_features=list(filter(lambda x: x.name != "age", self.features)),
             target_feature=Feature(name="age", type="numerical"),
             metrics=[MeanSquaredError()],
