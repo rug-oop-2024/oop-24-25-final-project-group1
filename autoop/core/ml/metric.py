@@ -136,7 +136,6 @@ class BalancedAccuracy(Metric):
         return balanced_accuracy
 
 
-
 class CohensKappa(Metric):
     """
     Implementation of Cohen's Kappa metric for multi-class classification tasks.

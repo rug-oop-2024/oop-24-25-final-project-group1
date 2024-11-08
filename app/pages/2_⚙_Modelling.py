@@ -4,7 +4,11 @@ import pandas as pd
 from app.core.system import AutoMLSystem
 from autoop.core.ml.dataset import Dataset
 from autoop.core.ml.feature import Feature
+from autoop.core.ml.pipeline import Pipeline
 from autoop.functional.feature import detect_feature_types 
+from autoop.core.ml.model.classification.classification_models import get_classification_models
+from autoop.core.ml.model.regression.regression_models import get_regression_models
+
 
 st.set_page_config(page_title="Modelling", page_icon="📈")
 
@@ -34,11 +38,35 @@ if selected_dataset_name:
 
     if input_features and target_features:
         target_feature_type = next(feature for feature in features if feature.name == target_features).type
-        if target_feature_type in ["int", "float"]:
+        if target_feature_type in ["numerical"]:
             task_type = "regression"
         else:
             task_type = "classification"
         
         st.write(f"Detected task type: {task_type}")
+        
+        if task_type == "classification":
+            model_options = get_classification_models()
+        else:
+            model_options = get_regression_models()
 
-    
+        selected_model_name = st.selectbox("Select a model", list(model_options.keys()))
+        selected_model_class = model_options[selected_model_name]
+        st.write(f"Selected model: {selected_model_name}")
+        
+        split_value = st.slider("Select a dataset split (e.g., 0.8 for 80% training, 20% testing)", 0.1, 0.9, 0.8)
+        st.write(f"Selected split value: {split_value}")
+
+        pipeline = Pipeline(
+            metrics=[],
+            dataset=selected_dataset,
+            model=selected_model_class(),
+            input_features=[feature for feature in features if feature.name in input_features],
+            target_feature=next(feature for feature in features if feature.name == target_features),
+            split=split_value
+        )
+
+        st.write("Pipeline created successfully!")
+        st.write(pipeline)
+
+
