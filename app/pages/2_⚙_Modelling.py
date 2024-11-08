@@ -8,6 +8,7 @@ from autoop.core.ml.pipeline import Pipeline
 from autoop.functional.feature import detect_feature_types 
 from autoop.core.ml.model.classification.classification_models import get_classification_models
 from autoop.core.ml.model.regression.regression_models import get_regression_models
+from autoop.core.ml.metric import METRICS, get_metric
 
 
 st.set_page_config(page_title="Modelling", page_icon="📈")
@@ -54,19 +55,26 @@ if selected_dataset_name:
         selected_model_class = model_options[selected_model_name]
         st.write(f"Selected model: {selected_model_name}")
         
-        split_value = st.slider("Select a dataset split (e.g., 0.8 for 80% training, 20% testing)", 0.1, 0.9, 0.8)
-        st.write(f"Selected split value: {split_value}")
+        model = selected_model_class()
+        st.write(f"Instantiated model: {model}")
+
+        st.write("## Select Metrics")
+        selected_metrics_names = st.multiselect("Select metrics", METRICS)
+        selected_metrics = [get_metric(name) for name in selected_metrics_names]
+        st.write(f"Selected metrics: {selected_metrics_names}")
+
+        st.write("## Select Dataset Split")
+        split_ratio = st.slider("Select the split ratio (0.1 to 0.9)", 0.1, 0.9, 0.8)
+        st.write(f"Selected split ratio: {split_ratio}")
 
         pipeline = Pipeline(
-            metrics=[],
+            metrics=selected_metrics,
             dataset=selected_dataset,
-            model=selected_model_class(),
+            model=model,
             input_features=[feature for feature in features if feature.name in input_features],
             target_feature=next(feature for feature in features if feature.name == target_features),
-            split=split_value
+            split=split_ratio
         )
-
-        st.write("Pipeline created successfully!")
-        st.write(pipeline)
+        st.write(f"Pipeline split: {pipeline._split}")
 
 

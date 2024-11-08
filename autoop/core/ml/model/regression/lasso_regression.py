@@ -15,7 +15,7 @@ class LassoRegressionModel(Model):
     """
     _model: SKLasso = PrivateAttr()
 
-    def __init__(self, alpha: float = 1.0, name: str = "test_model", asset_path: str = "./tmp", version: str = "0.1", **data):
+    def __init__(self, alpha: float = 1.0, name: str = "lasso_model", asset_path: str = "./tmp", version: str = "0.1", **data):
         """
         Initializes the Lasso model with a specified alpha parameter.
 
@@ -25,7 +25,8 @@ class LassoRegressionModel(Model):
         super().__init__(name=name, asset_path=asset_path, version=version, **data)
         self._model = SKLasso(alpha=alpha)
         self._hyperparameters['alpha'] = alpha
-
+        self._type = "regression"
+        
     def fit(self, observations: np.ndarray, ground_truth: np.ndarray) -> None:
         """
         Fits the Lasso regression model to the provided training data.

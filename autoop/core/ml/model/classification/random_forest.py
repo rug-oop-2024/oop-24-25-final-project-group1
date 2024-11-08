@@ -25,11 +25,11 @@ class RandomForestClassifierModel(Model):
             max_depth (int): The maximum depth of the trees (default: None).
         """
         super().__init__(**data)
-        # Set hyperparameters in the hyperparameters dictionary
         self._hyperparameters['n_estimators'] = n_estimators
         self._hyperparameters['max_depth'] = max_depth
 
         self._model = RandomForestClassifier(n_estimators=n_estimators, max_depth=max_depth)
+        self._type = "classification"
 
     def fit(self, observations: np.ndarray, ground_truth: np.ndarray) -> None:
         """

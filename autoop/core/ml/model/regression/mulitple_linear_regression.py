@@ -32,6 +32,7 @@ class MultipleLinearRegression(Model):
         """
         super().__init__(name=name, asset_path=asset_path, version=version, **data)
         self._hyperparameters['regularization'] = regularization
+        self._type = "regression"
 
     @property
     def weights(self) -> Dict:

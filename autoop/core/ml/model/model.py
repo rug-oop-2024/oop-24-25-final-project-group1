@@ -169,3 +169,4 @@ class Model(BaseModel, ABC):
             bool: True if the model has been trained, False otherwise.
         """
         return bool(self._parameters)
+    

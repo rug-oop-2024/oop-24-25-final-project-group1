@@ -23,6 +23,7 @@ class KNearestNeighbors(Model):
         super().__init__(**data)
         self.k = k
         self._hyperparameters['k'] = k
+        self._type = "classification"
 
     def fit(self, observations: np.ndarray, ground_truth: np.ndarray) -> None:
         """

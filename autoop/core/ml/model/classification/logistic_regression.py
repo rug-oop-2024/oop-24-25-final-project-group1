@@ -28,12 +28,12 @@ class LogisticRegressionModel(Model):
             C (float): Inverse of regularization strength (default: 1.0).
         """
         super().__init__(**data)
-        # Set hyperparameters in the hyperparameters dictionary
         self._hyperparameters['max_iter'] = max_iter
         self._hyperparameters['penalty'] = penalty
         self._hyperparameters['C'] = C
 
         self._model = LogisticRegression(max_iter=max_iter, penalty=penalty, C=C)
+        self._type = "classification"
 
     def fit(self, observations: np.ndarray, ground_truth: np.ndarray) -> None:
         """
@@ -92,3 +92,13 @@ class LogisticRegressionModel(Model):
             penalty=self._hyperparameters['penalty'],
             C=self._hyperparameters['C']
         )
+        
+    @property
+    def type(self) -> str:
+        """
+        Returns the type of the model.
+
+        Returns:
+            str: The type of the model.
+        """
+        return self._type

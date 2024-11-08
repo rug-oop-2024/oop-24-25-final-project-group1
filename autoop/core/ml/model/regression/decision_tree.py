@@ -35,6 +35,7 @@ class DecisionTreeRegressionModel(Model):
         )
         self._hyperparameters['max_depth'] = self.max_depth
         self._hyperparameters['min_samples_split'] = self.min_samples_split
+        self._type = "regression"
 
     def fit(self, observations: np.ndarray, ground_truth: np.ndarray) -> None:
         """
