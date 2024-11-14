@@ -16,11 +16,11 @@ class KNearestNeighbors(Model):
     k: int = Field(default=3, ge=1, description="Number of neighbors")
     _hyperparameters: Dict = PrivateAttr(default_factory=dict)
 
-    def __init__(self, k=3, **data):
+    def __init__(self, k=3, name: str = "test_model", asset_path: str = "./tmp", version: str = "0.1", **data):
         """
         Initializes the KNN model with a value of "k".
         """
-        super().__init__(**data)
+        super().__init__(name=name, asset_path=asset_path, version=version, **data)
         self.k = k
         self._hyperparameters['k'] = k
         self._type = "classification"

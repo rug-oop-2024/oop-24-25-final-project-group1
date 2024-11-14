@@ -75,7 +75,7 @@ class Artifact(ABC):
     def id(self) -> str:
         return self._id
     
-    def save1(self, directory: str) -> None:
+    def _save(self, directory: str) -> None:
         """
         Saves the artifact data to a specified directory. If the directory does
         not exist, it creates it.
@@ -106,7 +106,7 @@ class Artifact(ABC):
             print(f"The path is {self._asset_path}")
             # Providing a warning instead of raising an error for testing purposes
             print(f"Warning: Creating the data because it does not exist.")
-            self.save1("exports")
+            self._save("exports")
         try:
             with open(self._asset_path, 'rb') as file:
                 return file.read()

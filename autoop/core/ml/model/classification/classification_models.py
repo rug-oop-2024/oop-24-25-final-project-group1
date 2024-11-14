@@ -1,10 +1,10 @@
-from autoop.core.ml.model.classification.logistic_regression import LogisticRegression
-from autoop.core.ml.model.classification.random_forest import RandomForestClassifier
+from autoop.core.ml.model.classification.logistic_regression import LogisticRegressionModel
+from autoop.core.ml.model.classification.random_forest import RandomForestClassifierModel
 from autoop.core.ml.model.classification.knn import KNearestNeighbors
 
 def get_classification_models():
     return {
-        "Logistic Regression": LogisticRegression,
-        "Random Forest": RandomForestClassifier,
+        "Logistic Regression": LogisticRegressionModel,
+        "Random Forest": RandomForestClassifierModel,
         "KNN": KNearestNeighbors
     }

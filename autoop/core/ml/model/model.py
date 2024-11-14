@@ -21,13 +21,14 @@ class Model(BaseModel, ABC):
     _parameters: Dict = PrivateAttr(default_factory=dict)
     _hyperparameters: Dict = PrivateAttr(default_factory=dict)
     _artifact: Artifact = PrivateAttr()
-
+    _type: str = PrivateAttr()
+    
     def __init__(
         self, 
         name: str, 
         asset_path: str, 
-        version: str, 
-        **data: Any
+        version: str,
+        **data: Any,
     ) -> None:
         """
         Initializes the Model with an associated Artifact.
@@ -169,4 +170,14 @@ class Model(BaseModel, ABC):
             bool: True if the model has been trained, False otherwise.
         """
         return bool(self._parameters)
+    
+    @property
+    def type(self) -> str:
+        """
+        Get the type of the model.
+
+        Returns:
+            str: The type of the model.
+        """
+        return self._type
     

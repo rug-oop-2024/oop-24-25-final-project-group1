@@ -17,7 +17,7 @@ class LogisticRegressionModel(Model):
     _model: LogisticRegression = PrivateAttr()
     _hyperparameters: Dict = PrivateAttr(default_factory=dict)
 
-    def __init__(self, max_iter: int = 100, penalty: str = 'l2', C: float = 1.0, **data):
+    def __init__(self, name: str = "test_model", asset_path: str = "./tmp", version: str = "0.1", max_iter: int = 100, penalty: str = 'l2', C: float = 1.0, **data):
         """
         Initializes the Logistic Regression model with specified hyperparameters.
 
@@ -27,7 +27,7 @@ class LogisticRegressionModel(Model):
             penalty (str): The norm used in the penalization ('l2' by default).
             C (float): Inverse of regularization strength (default: 1.0).
         """
-        super().__init__(**data)
+        super().__init__(name=name, asset_path=asset_path, version=version, **data)
         self._hyperparameters['max_iter'] = max_iter
         self._hyperparameters['penalty'] = penalty
         self._hyperparameters['C'] = C
@@ -93,12 +93,3 @@ class LogisticRegressionModel(Model):
             C=self._hyperparameters['C']
         )
         
-    @property
-    def type(self) -> str:
-        """
-        Returns the type of the model.
-
-        Returns:
-            str: The type of the model.
-        """
-        return self._type

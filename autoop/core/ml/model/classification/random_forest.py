@@ -16,7 +16,7 @@ class RandomForestClassifierModel(Model):
     _model: RandomForestClassifier = PrivateAttr()
     _hyperparameters: Dict = PrivateAttr(default_factory=dict)
 
-    def __init__(self, n_estimators: int = 100, max_depth: int = None, **data):
+    def __init__(self, name: str = "test_model", asset_path: str = "./tmp", version: str = "0.1", n_estimators: int = 100, max_depth: int = None, **data):
         """
         Initializes the Random Forest Classifier model with specified hyperparameters.
 
@@ -24,7 +24,7 @@ class RandomForestClassifierModel(Model):
             n_estimators (int): The number of trees in the forest (default: 100).
             max_depth (int): The maximum depth of the trees (default: None).
         """
-        super().__init__(**data)
+        super().__init__(name=name, asset_path=asset_path, version=version, **data)
         self._hyperparameters['n_estimators'] = n_estimators
         self._hyperparameters['max_depth'] = max_depth
 
