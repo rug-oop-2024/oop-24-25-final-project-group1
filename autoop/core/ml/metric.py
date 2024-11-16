@@ -55,6 +55,16 @@ class Metric(ABC):
         """
         pass
     
+    @abstractmethod
+    def __str__(self):
+        """
+        Return a string representation of the metric.
+
+        Returns:
+            str: The string representation of the metric.
+        """
+        pass
+    
     def evaluate(self, ground_truth: Any, prediction: Any) -> float:
         """
         Evaluate the metric by calculating the value and printing a summary.
@@ -88,6 +98,9 @@ class MeanSquaredError(Metric):
         """
         error = np.mean((ground_truth - prediction) ** 2)
         return error
+    
+    def __str__(self):
+        return "Mean Squared Error"
 
 class Accuracy(Metric):
     """
@@ -107,6 +120,9 @@ class Accuracy(Metric):
         correct_predictions = np.sum(ground_truth == prediction)
         accuracy = correct_predictions / len(ground_truth)
         return accuracy
+    
+    def __str__(self):
+        return "Accuracy"
 
 class BalancedAccuracy(Metric):
     """
@@ -134,6 +150,9 @@ class BalancedAccuracy(Metric):
                 recalls.append(true_positive / (true_positive + false_negative))
         balanced_accuracy = np.mean(recalls)
         return balanced_accuracy
+    
+    def __str__(self):
+        return "Balanced Accuracy"
 
 
 class CohensKappa(Metric):
@@ -169,6 +188,9 @@ class CohensKappa(Metric):
         
         cohen_kappa = (observed_accuracy - expected_accuracy) / (1 - expected_accuracy)
         return cohen_kappa
+    
+    def __str__(self):
+        return "Cohen's Kappa"
 
 
 class R2Score(Metric):
@@ -190,6 +212,9 @@ class R2Score(Metric):
         ss_residual = np.sum((ground_truth - prediction) ** 2)
         r2_score = 1 - (ss_residual / ss_total)
         return r2_score
+    
+    def __str__(self):
+        return "R² Score"
 
 class MeanAbsoluteError(Metric):
     """
@@ -208,3 +233,6 @@ class MeanAbsoluteError(Metric):
         """
         error = np.mean(np.abs(ground_truth - prediction))
         return error
+    
+    def __str__(self):
+        return "Mean Absolute Error"

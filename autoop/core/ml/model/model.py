@@ -19,7 +19,6 @@ class Model(BaseModel, ABC):
     """
 
     _parameters: Dict = PrivateAttr(default_factory=dict)
-    _hyperparameters: Dict = PrivateAttr(default_factory=dict)
     _artifact: Artifact = PrivateAttr()
     _type: str = PrivateAttr()
     

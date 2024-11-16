@@ -3,8 +3,6 @@ from autoop.core.ml.model import Model
 from autoop.core.ml.artifact import Artifact
 import numpy as np
 from pydantic import PrivateAttr, Field
-from typing import Dict
-
 
 class DecisionTreeRegressionModel(Model):
     """
@@ -19,7 +17,6 @@ class DecisionTreeRegressionModel(Model):
     max_depth: int = Field(default=None, ge=1, description="Maximum depth of the tree")
     min_samples_split: int = Field(default=2, ge=2, description="Minimum number of samples required to split an internal node")
 
-
     def __init__(self, name: str = "test_model", asset_path: str = "./tmp", version: str = "0.1", **data):
         """
         Initializes the Decision Tree Regression model with specified hyperparameters.
@@ -33,8 +30,10 @@ class DecisionTreeRegressionModel(Model):
             max_depth=self.max_depth,
             min_samples_split=self.min_samples_split
         )
-        self._hyperparameters['max_depth'] = self.max_depth
-        self._hyperparameters['min_samples_split'] = self.min_samples_split
+        self._parameters = {
+            'max_depth': self.max_depth,
+            'min_samples_split': self.min_samples_split
+        }
         self._type = "regression"
 
     def fit(self, observations: np.ndarray, ground_truth: np.ndarray) -> None:
@@ -70,8 +69,7 @@ class DecisionTreeRegressionModel(Model):
         """
         model_data = {
             'model': self._model,
-            'parameters': self._parameters,
-            'hyperparameters': self._hyperparameters
+            'parameters': self._parameters
         }
         self._artifact.data = str(model_data).encode()
         self._artifact.save(directory)
@@ -88,4 +86,4 @@ class DecisionTreeRegressionModel(Model):
         model_data = eval(loaded_artifact.data.decode())
         self._model = model_data['model']
         self._parameters = model_data['parameters']
-        self._hyperparameters = model_data['hyperparameters']
+        self._type = "regression"

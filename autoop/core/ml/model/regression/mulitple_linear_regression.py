@@ -3,6 +3,7 @@ from autoop.core.ml.artifact import Artifact
 from autoop.core.ml.model import Model
 from pydantic import PrivateAttr
 from typing import Dict
+import numpy as np
 
 
 class MultipleLinearRegression(Model):
@@ -31,7 +32,9 @@ class MultipleLinearRegression(Model):
             regularization (float): Regularization strength (default: 0.0).
         """
         super().__init__(name=name, asset_path=asset_path, version=version, **data)
-        self._hyperparameters['regularization'] = regularization
+        self._parameters = {
+            "regularization": regularization
+        }
         self._type = "regression"
 
     @property
@@ -51,7 +54,7 @@ class MultipleLinearRegression(Model):
             p_features).
             ground_truth (np.ndarray): Target vector of shape (n_samples,).
         """
-        regularization = self._hyperparameters.get('regularization', 0.0)
+        regularization = self._parameters.get('regularization', 0.0)
         observations_b: np.ndarray = np.c_[
             observations, np.ones(observations.shape[0])
         ]
@@ -70,7 +73,7 @@ class MultipleLinearRegression(Model):
             self._parameters['weights'] = self._weights
         except np.linalg.LinAlgError as e:
             raise ValueError(f"Error inverting matrix during training: {e}")
-
+    
     def predict(self, observations: np.ndarray) -> np.ndarray:
         """
         Predicts the values for the provided observations.
@@ -85,7 +88,6 @@ class MultipleLinearRegression(Model):
         if self._weights is None:
             raise ValueError("Model has not been trained yet. Please fit the model before predicting.")
         
-        # Adding a column of ones to observations for intercept/bias term
         observations_b = np.c_[
             observations, np.ones(observations.shape[0])
         ]
@@ -98,7 +100,6 @@ class MultipleLinearRegression(Model):
         Args:
             directory (str): The directory where the model should be saved.
         """
-        # Create Artifact instance during save
         self._artifact = Artifact(
             asset_path=f"{directory}/{self.__class__.__name__}.bin",
             version="1.0.0",
@@ -108,14 +109,11 @@ class MultipleLinearRegression(Model):
             tags=["multiple_linear_regression"]
         )
 
-        # Encode the model data
         model_data = {
-            'parameters': self._parameters,
-            'hyperparameters': self._hyperparameters
+            'parameters': self._parameters
         }
         self._artifact.data = str(model_data).encode()
 
-        # Save using the Artifact's save method
         self._artifact.save()
 
     def load(self, directory: str, artifact_id: str) -> None:
@@ -126,7 +124,6 @@ class MultipleLinearRegression(Model):
             directory (str): The directory where the model is stored.
             artifact_id (str): The unique ID of the model artifact to be loaded.
         """
-        # Instantiate Artifact for loading the model
         self._artifact = Artifact(
             asset_path=f"{directory}/{artifact_id}.bin",
             version="1.0.0",
@@ -136,9 +133,7 @@ class MultipleLinearRegression(Model):
             tags=["multiple_linear_regression"]
         )
 
-        # Load the model data
-        loaded_data = self._artifact.read()  # Assuming the read method is implemented to read the file
+        loaded_data = self._artifact.read()
         model_data = eval(loaded_data.decode())
         self._parameters = model_data['parameters']
-        self._hyperparameters = model_data['hyperparameters']
         self._weights = self._parameters.get('weights')

@@ -31,33 +31,28 @@ def select_dataset(datasets):
     return None
 
 def select_features(features: list[Feature]):
-    features_by_names = {feature.name: feature for feature in features}
-
-    feature_names = list(features_by_names.keys())
-
+    feature_names = [feature.name for feature in features]
+    
     input_features_names = st.multiselect("Select input features", feature_names)
 
-    if 0 < len(input_features_names) < len(features_by_names):
-        options_target_features = [
-            name for name in feature_names if name not in input_features_names
-        ]
+    input_features = [feature for feature in features if feature.name in input_features_names]
 
-        selected_target_feature_name = st.selectbox(
-            "Select target feature", options_target_features
-        )
+    available_target_features = [
+        feature for feature in features if feature.name not in input_features_names
+    ]
 
-        input_features = [features_by_names[name] for name in input_features_names]
-        target_feature = features_by_names[selected_target_feature_name]
+    target_feature_name = st.selectbox("Select target feature", [feature.name for feature in available_target_features])
+    target_feature = next(feature for feature in available_target_features if feature.name == target_feature_name)
 
-        return input_features, target_feature
+    return input_features, target_feature
 
-    st.warning("Please select fewer input features to leave at least one feature for the target.")
-    return None
-
-
-
-def determine_task_type(features: list[Feature], target_feature: Feature):
-    return "regression" if target_feature.is_numerical() else "classification"
+def determine_task_type(features: list[Feature], target_feature: Feature) -> str:
+    if target_feature.type == 'categorical':
+        return 'classification'
+    elif target_feature.type == 'numerical':
+        return 'regression'
+    else:
+        raise ValueError(f"Unsupported target feature type: {target_feature.type}")
 
 def select_model(task_type):
     if task_type == "classification":
@@ -81,17 +76,13 @@ def select_split_ratio():
     return split_ratio
 
 def create_pipeline(selected_dataset, input_features: list[Feature], target_feature: Feature, model, selected_metrics, split_ratio):
-    # Read the dataset
     raw = selected_dataset.read()
     
-    # Convert raw bytes to DataFrame if necessary
     if isinstance(raw, bytes):
         raw = pd.read_csv(io.StringIO(raw.decode()))
     
-    # Create a new Dataset object with the DataFrame
     dataset = Dataset.from_dataframe(raw, selected_dataset._name, selected_dataset._asset_path, selected_dataset._version)
     
-    # Proceed with creating the pipeline
     pipeline = Pipeline(
         dataset=dataset,
         input_features=input_features,

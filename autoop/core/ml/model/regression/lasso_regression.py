@@ -24,7 +24,9 @@ class LassoRegressionModel(Model):
         """
         super().__init__(name=name, asset_path=asset_path, version=version, **data)
         self._model = SKLasso(alpha=alpha)
-        self._hyperparameters['alpha'] = alpha
+        self._parameters = {
+            "hyperparameters": self._model.get_params()
+        }
         self._type = "regression"
         
     def fit(self, observations: np.ndarray, ground_truth: np.ndarray) -> None:
@@ -63,7 +65,6 @@ class LassoRegressionModel(Model):
         model_data = {
             'model': self._model,
             'parameters': self._parameters,
-            'hyperparameters': self._hyperparameters
         }
         self._artifact.data = str(model_data).encode()
         self._artifact.save(directory)
@@ -80,4 +81,4 @@ class LassoRegressionModel(Model):
         model_data = eval(loaded_artifact.data.decode())
         self._model = model_data['model']
         self._parameters = model_data['parameters']
-        self._hyperparameters = model_data['hyperparameters']
+        self._type = "regression"
