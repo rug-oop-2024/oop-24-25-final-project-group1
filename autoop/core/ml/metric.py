@@ -2,14 +2,6 @@ from abc import ABC, abstractmethod
 from typing import Any
 import numpy as np
 
-METRICS = [
-    "mean_squared_error",
-    "accuracy",
-    "balanced_accuracy",
-    "cohens_kappa",
-    "r2_score",
-    "mean_absolute_error",
-]
 
 def get_metric(name: str):
     """
@@ -20,17 +12,17 @@ def get_metric(name: str):
     Returns:
         Metric: An instance of a metric class corresponding to the name.
     """
-    if name == "mean_squared_error":
+    if name == "Mean Squared Error":
         return MeanSquaredError()
-    elif name == "accuracy":
+    elif name == "Accuracy":
         return Accuracy()
-    elif name == "balanced_accuracy":
+    elif name == "Balanced Accuracy":
         return BalancedAccuracy()
-    elif name == "cohens_kappa":
-        return CohensKappa()
-    elif name == "r2_score":
+    elif name == "Macro Precision":
+        return MacroPrecision()
+    elif name == "R² Score":
         return R2Score()
-    elif name == "mean_absolute_error":
+    elif name == "Mean Absolute Error":
         return MeanAbsoluteError()
     else:
         raise ValueError(f"Unknown metric: {name}")
@@ -155,43 +147,78 @@ class BalancedAccuracy(Metric):
         return "Balanced Accuracy"
 
 
-class CohensKappa(Metric):
+class LogLoss(Metric):
     """
-    Implementation of Cohen's Kappa metric for multi-class classification tasks.
+    Implementation of Log Loss (Cross-Entropy Loss) for multi-class classification tasks.
     """
     def __call__(self, ground_truth: np.ndarray, prediction: np.ndarray) -> float:
         """
-        Calculate Cohen's Kappa to measure the agreement between predicted and true values, accounting for chance agreement.
+        Calculate Log Loss for multi-class classification.
 
         Args:
-            ground_truth (np.ndarray): The true values.
-            prediction (np.ndarray): The predicted values.
+            ground_truth (np.ndarray): The true class labels (shape: n_samples,).
+            prediction (np.ndarray): The predicted probabilities for each class
+                                     (shape: n_samples, n_classes).
 
         Returns:
-            float: The computed Cohen's Kappa value.
+            float: The computed Log Loss value.
         """
-        num_classes = len(np.unique(ground_truth))
-        confusion_matrix = np.zeros((num_classes, num_classes), dtype=int)
+        prediction = np.clip(prediction, 1e-15, 1 - 1e-15)  # Avoid log(0) issues
+        n_samples = ground_truth.shape[0]
         
-        for true, pred in zip(ground_truth, prediction):
-            confusion_matrix[true, pred] += 1
-        
-        total_samples = np.sum(confusion_matrix)
-        observed_accuracy = np.trace(confusion_matrix) / total_samples
-        
-        row_marginals = np.sum(confusion_matrix, axis=1)
-        col_marginals = np.sum(confusion_matrix, axis=0)
-        expected_accuracy = np.sum((row_marginals * col_marginals) / total_samples) / total_samples
-        
-        if expected_accuracy == 1:
-            return 1.0 
-        
-        cohen_kappa = (observed_accuracy - expected_accuracy) / (1 - expected_accuracy)
-        return cohen_kappa
+        n_classes = prediction.shape[1]
+        one_hot_ground_truth = np.zeros((n_samples, n_classes))
+        one_hot_ground_truth[np.arange(n_samples), ground_truth] = 1
+
+        log_loss = -np.sum(one_hot_ground_truth * np.log(prediction)) / n_samples
+        return log_loss
+
+    def __str__(self):
+        return "Log Loss"
+    
+    
+class MacroPrecision(Metric):
+    """Class for MacroPrecision. Inherits from Metric
+    """
+
+    def __call__(self, true_labels: np.ndarray, predicted_labels: np.ndarray) -> float:
+        """Calculates the Macro Precision using the __call__ method.
+
+        Args:
+            true_labels (np.ndarray): True Values
+            predicted_labels (np.ndarray): Predicted Values
+
+        Returns:
+            float: Calculated Macro Precision
+        """
+        classes = np.unique(true_labels)
+        precision_values = [
+            self._calculate_precision_for_class(true_labels, predicted_labels, label)
+            for label in classes
+        ]
+
+        return np.mean(precision_values)
+
+    def _calculate_precision_for_class(self, true_labels, predicted_labels, label):
+        """Helper function to calculate precision for a specific class.
+
+        Args:
+            true_labels (np.ndarray): True Values
+            predicted_labels (np.ndarray): Predicted Values
+            label: The class label to calculate precision for
+
+        Returns:
+            float: Precision value for the specified class
+        """
+        true_positives = np.sum((predicted_labels == label) & (true_labels == label))
+        total_predicted = np.sum(predicted_labels == label)
+
+        return true_positives / total_predicted if total_predicted > 0 else 0.0
     
     def __str__(self):
-        return "Cohen's Kappa"
+        return "Macro Precision"
 
+    
 
 class R2Score(Metric):
     """
@@ -236,3 +263,23 @@ class MeanAbsoluteError(Metric):
     
     def __str__(self):
         return "Mean Absolute Error"
+
+
+def get_regression_metrics() -> list[Metric]:
+    """
+    Get a list of regression metrics.
+
+    Returns:
+        List[Metric]: A list of regression metrics.
+    """
+    return [MeanSquaredError(), R2Score(), MeanAbsoluteError()]
+
+
+def get_classification_metrics() -> list[Metric]:
+    """
+    Get a list of classification metrics.
+
+    Returns:
+        List[Metric]: A list of classification metrics.
+    """
+    return [Accuracy(), BalancedAccuracy(), MacroPrecision()]

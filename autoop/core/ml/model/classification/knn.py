@@ -1,8 +1,9 @@
 import numpy as np
+from sklearn.neighbors import KNeighborsClassifier
 from autoop.core.ml.artifact import Artifact
 from autoop.core.ml.model import Model
 from pydantic import PrivateAttr, Field
-from typing import Dict
+import numpy as np
 
 
 class KNearestNeighbors(Model):
@@ -14,7 +15,8 @@ class KNearestNeighbors(Model):
     - k (int): The number of nearest neighbors to consider when making predictions.
     """
     k: int = Field(default=3, ge=1, description="Number of neighbors")
-    _hyperparameters: Dict = PrivateAttr(default_factory=dict)
+    _model: KNeighborsClassifier = PrivateAttr()
+    _parameters: dict = PrivateAttr(default_factory=dict)
 
     def __init__(self, k=3, name: str = "test_model", asset_path: str = "./tmp", version: str = "0.1", **data):
         """
@@ -22,8 +24,9 @@ class KNearestNeighbors(Model):
         """
         super().__init__(name=name, asset_path=asset_path, version=version, **data)
         self.k = k
-        self._hyperparameters['k'] = k
+        self._parameters['k'] = k
         self._type = "classification"
+        self._model = KNeighborsClassifier(n_neighbors=k)
 
     def fit(self, observations: np.ndarray, ground_truth: np.ndarray) -> None:
         """
@@ -33,9 +36,13 @@ class KNearestNeighbors(Model):
             observations (np.ndarray): Feature matrix of shape (n_samples, n_features).
             ground_truth (np.ndarray): Target vector of shape (n_samples,).
         """
+        
+        X = np.asarray(observations)
+        self._model.fit(X, ground_truth)
         self._parameters = {
             "observations": observations,
             "ground_truth": ground_truth,
+            "k": self.k
         }
 
     def predict(self, observations: np.ndarray) -> np.ndarray:
@@ -46,34 +53,10 @@ class KNearestNeighbors(Model):
             observations (np.ndarray): Feature matrix of shape (n_samples, n_features).
 
         Returns:
-            np.ndarray: Predicted values of shape (n_samples,).
+            np.ndarray: Predicted class names of shape (n_samples,).
         """
-        predictions = [self._predict_single(x) for x in observations]
-        return np.array(predictions)
+        return self._model.predict(observations)
 
-    def _predict_single(self, observation: np.ndarray) -> int:
-        """
-        Attributes a label to a single observation based on `k` nearest neighbors.
-
-        Args:
-            observation (np.ndarray): Feature vector of shape (n_features,).
-
-        Returns:
-            int: Predicted class label.
-        """
-        distances = np.linalg.norm(self._parameters["observations"] - observation, axis=1)
-        k_indices = np.argsort(distances)[:self.k]
-        k_nearest_labels = [self._parameters["ground_truth"][i] for i in k_indices]
-
-        label_counts = {}
-        for label in k_nearest_labels:
-            if label in label_counts:
-                label_counts[label] += 1
-            else:
-                label_counts[label] = 1
-
-        most_common_label = max(label_counts, key=label_counts.get)
-        return most_common_label
 
     def save(self, directory: str) -> None:
         """
@@ -83,8 +66,7 @@ class KNearestNeighbors(Model):
             directory (str): The directory where the model should be saved.
         """
         model_data = {
-            'parameters': self._parameters,
-            'hyperparameters': self._hyperparameters
+            'parameters': self._parameters
         }
         self._artifact.data = str(model_data).encode()
         self._artifact.save(directory)
@@ -100,5 +82,7 @@ class KNearestNeighbors(Model):
         loaded_artifact = Artifact.load(directory, artifact_id)
         model_data = eval(loaded_artifact.data.decode())
         self._parameters = model_data['parameters']
-        self._hyperparameters = model_data['hyperparameters']
-        self.k = self._hyperparameters.get('k', 3)
+        self.k = self._parameters.get('k', 3)
+        self._model = KNeighborsClassifier(n_neighbors=self.k)
+        if "observations" in self._parameters and "ground_truth" in self._parameters:
+            self._model.fit(self._parameters["observations"], self._parameters["ground_truth"])
