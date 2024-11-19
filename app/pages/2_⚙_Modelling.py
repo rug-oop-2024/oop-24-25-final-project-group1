@@ -240,6 +240,8 @@ def to_artifact(pipeline: Pipeline, name: str, version: str) -> Artifact:
         Artifact: The created artifact from the pipeline.
     """
     pipeline_data = pickle.dumps({
+        'name': name,
+        'version': version,
         'input_features': pipeline._input_features,
         'target_feature': pipeline._target_feature,
         'split': pipeline._split,

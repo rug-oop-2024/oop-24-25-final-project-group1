@@ -8,6 +8,7 @@ class Artifact(ABC):
     contains information about this specific asset."""
 
     _id_iter = itertools.count()
+    _base_path = "assets/objects/"
 
     def __init__(
         self, 
@@ -102,17 +103,18 @@ class Artifact(ABC):
             FileNotFoundError: If the file at `asset_path` could not be found 
                 after attempting to read it.
         """
-        if not os.path.exists(self._asset_path):
-            print(f"The path is {self._asset_path}")
+        if not os.path.exists(self._base_path + self._asset_path):
+            print(f"The path is {self._base_path + self._asset_path}")
             # Providing a warning instead of raising an error for testing purposes
             print(f"Warning: Creating the data because it does not exist.")
-            self.save1("exports")
+            print(f"The path is {self._asset_path}")
+            self.save1(self._base_path)
         try:
-            with open(self._asset_path, 'rb') as file:
+            with open(self._base_path + self._asset_path, 'rb') as file:
                 return file.read()
         except FileNotFoundError:
             raise FileNotFoundError(
-                f"The file at path {self._asset_path} could not be found."
+                f"The file at path {self._base_path + self._asset_path} could not be found."
             )
 
     def get_id(self) -> str:

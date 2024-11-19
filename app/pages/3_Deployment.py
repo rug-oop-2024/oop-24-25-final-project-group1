@@ -35,9 +35,10 @@ def load_pipeline(file_path: str):
         pipeline_data = pickle.load(file)
     #append the file path to the pipeline data
     filename = os.path.basename(file_path)
-    name, version = os.path.splitext(filename)[0].rsplit('_v', 1)
-    pipeline_data['name'] = name
-    pipeline_data['version'] = version
+    # name, version = os.path.splitext(filename)[0].rsplit('_v', 1)
+    # pipeline_data["name"] = name
+    # pipeline_data["version"] = version
+
     return pipeline_data
 
 def show_pipeline_summary(pipeline_data: dict) -> None:
@@ -52,6 +53,34 @@ def show_pipeline_summary(pipeline_data: dict) -> None:
     st.write(pipeline_data['name'])
     st.markdown("### Version")
     st.write(pipeline_data['version'])
+    st.markdown("### Input Features")
+    st.write(pipeline_data['input_features'])
+    st.markdown("### Target Feature")
+    st.write(pipeline_data['target_feature'])
+    st.markdown("### Data Split")
+    st.write(pipeline_data['split'])
+    st.markdown("### Model")
+    st.write(pipeline_data['model'])
+    st.markdown("### Metrics")
+    st.write(pipeline_data['metrics'])
+    st.markdown("### Dataset")
+    st.write(pipeline_data['dataset'])
+    
+    
+def predict_with_pipeline(pipeline_data: dict, input_data: pd.DataFrame) -> pd.DataFrame:
+    """
+    Uses the loaded pipeline to perform predictions on the input data.
+
+    Args:
+        pipeline_data (dict): The loaded pipeline data.
+        input_data (pd.DataFrame): The input data for predictions.
+
+    Returns:
+        pd.DataFrame: The predictions.
+    """
+    pipeline = pipeline_data['pipeline']
+    predictions = pipeline._model.predict(input_data)
+    return pd.DataFrame(predictions, columns=['Prediction'])
 
 st.title("📈 Deployment")
 
