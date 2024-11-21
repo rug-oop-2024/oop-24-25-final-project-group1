@@ -27,3 +27,4 @@ class Feature:
         :return: True if the feature is categorical, otherwise False.
         """
         return self.type == "categorical"
+    

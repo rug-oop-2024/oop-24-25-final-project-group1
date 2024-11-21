@@ -1,8 +1,8 @@
-
 import json
-from typing import Dict, Tuple, List, Union
 
+from typing import Tuple, List, Union
 from autoop.core.storage import Storage
+
 
 class Database():
 
@@ -40,7 +40,7 @@ class Database():
         if not self._data.get(collection, None):
             return None
         return self._data[collection].get(id, None)
-    
+
     def delete(self, collection: str, id: str):
         """Delete a key from the database
         Args:
@@ -84,7 +84,7 @@ class Database():
             collection, id = key.split("/")[-2:]
             if not self._data.get(collection, id):
                 self._storage.delete(f"{collection}/{id}")
-    
+
     def _load(self):
         """Load the data from storage"""
         self._data = {}
@@ -95,4 +95,3 @@ class Database():
             if collection not in self._data:
                 self._data[collection] = {}
             self._data[collection][id] = json.loads(data.decode())
-

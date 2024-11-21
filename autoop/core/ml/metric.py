@@ -146,36 +146,6 @@ class BalancedAccuracy(Metric):
     def __str__(self):
         return "Balanced Accuracy"
 
-
-class LogLoss(Metric):
-    """
-    Implementation of Log Loss (Cross-Entropy Loss) for multi-class classification tasks.
-    """
-    def __call__(self, ground_truth: np.ndarray, prediction: np.ndarray) -> float:
-        """
-        Calculate Log Loss for multi-class classification.
-
-        Args:
-            ground_truth (np.ndarray): The true class labels (shape: n_samples,).
-            prediction (np.ndarray): The predicted probabilities for each class
-                                     (shape: n_samples, n_classes).
-
-        Returns:
-            float: The computed Log Loss value.
-        """
-        prediction = np.clip(prediction, 1e-15, 1 - 1e-15)  # Avoid log(0) issues
-        n_samples = ground_truth.shape[0]
-        
-        n_classes = prediction.shape[1]
-        one_hot_ground_truth = np.zeros((n_samples, n_classes))
-        one_hot_ground_truth[np.arange(n_samples), ground_truth] = 1
-
-        log_loss = -np.sum(one_hot_ground_truth * np.log(prediction)) / n_samples
-        return log_loss
-
-    def __str__(self):
-        return "Log Loss"
-    
     
 class MacroPrecision(Metric):
     """Class for MacroPrecision. Inherits from Metric

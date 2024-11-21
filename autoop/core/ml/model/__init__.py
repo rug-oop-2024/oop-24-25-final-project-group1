@@ -4,7 +4,7 @@ from autoop.core.ml.model.regression.mulitple_linear_regression import MultipleL
 from autoop.core.ml.model.regression.decision_tree import DecisionTreeRegressionModel
 from autoop.core.ml.model.regression.lasso_regression import LassoRegressionModel
 from autoop.core.ml.model.classification.knn import KNearestNeighbors
-from autoop.core.ml.model.classification.logistic_regression import LogisticRegressionModel
+from autoop.core.ml.model.classification.decision_tree_classification import DecisionTreeClassificationModel
 from autoop.core.ml.model.classification.random_forest import RandomForestClassifierModel
 
 REGRESSION_MODELS = [
@@ -15,9 +15,10 @@ REGRESSION_MODELS = [
 
 CLASSIFICATION_MODELS = [
     "KNNModel",
-    "LogisticRegressionModel",
+    "DecisionTreeClassificationModel",
     "RandomForestModel",
 ]
+
 
 def get_model(model_name: str) -> Model:
     """Factory function to get a model by name."""
@@ -29,8 +30,8 @@ def get_model(model_name: str) -> Model:
         return LassoRegressionModel()
     elif model_name == "KNNModel":
         return KNearestNeighbors()
-    elif model_name == "LogisticRegressionModel":
-        return LogisticRegressionModel()
+    elif model_name == "DecisionTreeClassificationModel":
+        return DecisionTreeClassificationModel()
     elif model_name == "RandomForestModel":
         return RandomForestClassifierModel()
     else:

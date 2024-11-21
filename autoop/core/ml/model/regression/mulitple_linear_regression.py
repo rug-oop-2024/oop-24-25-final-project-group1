@@ -3,7 +3,6 @@ from autoop.core.ml.artifact import Artifact
 from autoop.core.ml.model import Model
 from pydantic import PrivateAttr
 from typing import Dict
-import numpy as np
 
 
 class MultipleLinearRegression(Model):
@@ -73,7 +72,7 @@ class MultipleLinearRegression(Model):
             self._parameters['weights'] = self._weights
         except np.linalg.LinAlgError as e:
             raise ValueError(f"Error inverting matrix during training: {e}")
-    
+
     def predict(self, observations: np.ndarray) -> np.ndarray:
         """
         Predicts the values for the provided observations.
@@ -87,7 +86,7 @@ class MultipleLinearRegression(Model):
         """
         if self._weights is None:
             raise ValueError("Model has not been trained yet. Please fit the model before predicting.")
-        
+
         observations_b = np.c_[
             observations, np.ones(observations.shape[0])
         ]

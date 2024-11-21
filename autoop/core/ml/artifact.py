@@ -1,7 +1,9 @@
 import base64
-from abc import ABC
 import itertools
 import os
+
+from abc import ABC
+
 
 class Artifact(ABC):
     """Abstract base class representing an asset that can be stored and 
@@ -11,13 +13,13 @@ class Artifact(ABC):
     _base_path = "assets/objects/"
 
     def __init__(
-        self, 
-        name: str, 
-        asset_path: str, 
-        version: str, 
-        data: bytes = None, 
-        metadata: dict = None, 
-        type: str = "", 
+        self,
+        name: str,
+        asset_path: str,
+        version: str,
+        data: bytes = None,
+        metadata: dict = None,
+        type: str = "",
         tags: list = None
     ) -> None:
         """
@@ -28,11 +30,11 @@ class Artifact(ABC):
             asset_path (str): The path where the asset is stored.
             version (str): The version of the asset.
             data (bytes, optional): The binary data of the asset. Defaults to None.
-            metadata (dict, optional): A dictionary containing additional metadata 
+            metadata (dict, optional): A dictionary containing additional metadata
                 about the asset. Defaults to an empty dictionary if None.
-            type (str, optional): The type of the asset, such as "model:torch" 
+            type (str, optional): The type of the asset, such as "model:torch"
                 or "dataset". Defaults to an empty string.
-            tags (list, optional): A list of tags describing the asset. 
+            tags (list, optional): A list of tags describing the asset.
                 Defaults to an empty list if None.
         """
         self._name = name
@@ -75,7 +77,7 @@ class Artifact(ABC):
     @property
     def id(self) -> str:
         return self._id
-    
+
     def save1(self, directory: str) -> None:
         """
         Saves the artifact data to a specified directory. If the directory does
@@ -93,20 +95,20 @@ class Artifact(ABC):
 
     def read(self) -> bytes:
         """
-        Reads and returns the binary data of the artifact. If the artifact file 
+        Reads and returns the binary data of the artifact. If the artifact file
         does not exist, it creates a new file in the "exports" directory.
 
         Returns:
             bytes: The binary data of the artifact.
 
         Raises:
-            FileNotFoundError: If the file at `asset_path` could not be found 
+            FileNotFoundError: If the file at `asset_path` could not be found
                 after attempting to read it.
         """
         if not os.path.exists(self._base_path + self._asset_path):
             print(f"The path is {self._base_path + self._asset_path}")
             # Providing a warning instead of raising an error for testing purposes
-            print(f"Warning: Creating the data because it does not exist.")
+            print("Warning: Creating the data because it does not exist.")
             print(f"The path is {self._asset_path}")
             self.save1(self._base_path)
         try:
@@ -119,11 +121,11 @@ class Artifact(ABC):
 
     def get_id(self) -> str:
         """
-        Generates a unique ID for the artifact based on its asset path and 
+        Generates a unique ID for the artifact based on its asset path and
         version.
 
         Returns:
-            str: A unique ID string derived from base64 encoding of the asset 
+            str: A unique ID string derived from base64 encoding of the asset
                 path and version.
         """
         encoded_path = base64.urlsafe_b64encode(self._asset_path.encode()).decode()

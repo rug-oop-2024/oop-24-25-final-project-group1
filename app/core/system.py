@@ -1,13 +1,12 @@
 from autoop.core.storage import LocalStorage
 from autoop.core.database import Database
-from autoop.core.ml.dataset import Dataset
 from autoop.core.ml.artifact import Artifact
 from autoop.core.storage import Storage
 from typing import List
 
 
 class ArtifactRegistry():
-    def __init__(self, 
+    def __init__(self,
                  database: Database,
                  storage: Storage):
         self._database = database
@@ -25,9 +24,9 @@ class ArtifactRegistry():
             "metadata": artifact.metadata,
             "type": artifact.type,
         }
-        self._database.set(f"artifacts", artifact.id, entry)
-    
-    def list(self, type: str=None) -> List[Artifact]:
+        self._database.set("artifacts", artifact.id, entry)
+
+    def list(self, type: str = None) -> List[Artifact]:
         entries = self._database.list("artifacts")
         artifacts = []
         for id, data in entries:
@@ -44,7 +43,7 @@ class ArtifactRegistry():
             )
             artifacts.append(artifact)
         return artifacts
-    
+
     def get(self, artifact_id: str) -> Artifact:
         data = self._database.get("artifacts", artifact_id)
         return Artifact(
@@ -56,12 +55,12 @@ class ArtifactRegistry():
             data=self._storage.load(data["asset_path"]),
             type=data["type"],
         )
-    
+
     def delete(self, artifact_id: str):
         data = self._database.get("artifacts", artifact_id)
         self._storage.delete(data["asset_path"])
         self._database.delete("artifacts", artifact_id)
-    
+
 
 class AutoMLSystem:
     _instance = None
@@ -75,14 +74,14 @@ class AutoMLSystem:
     def get_instance():
         if AutoMLSystem._instance is None:
             AutoMLSystem._instance = AutoMLSystem(
-                LocalStorage("./assets/objects"), 
+                LocalStorage("./assets/objects"),
                 Database(
                     LocalStorage("./assets/dbo")
                 )
             )
         AutoMLSystem._instance._database.refresh()
         return AutoMLSystem._instance
-    
+
     @property
     def registry(self):
         return self._registry

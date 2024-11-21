@@ -28,7 +28,7 @@ class LassoRegressionModel(Model):
             "hyperparameters": self._model.get_params()
         }
         self._type = "regression"
-        
+
     def fit(self, observations: np.ndarray, ground_truth: np.ndarray) -> None:
         """
         Fits the Lasso regression model to the provided training data.

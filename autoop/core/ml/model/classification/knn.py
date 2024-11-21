@@ -3,7 +3,6 @@ from sklearn.neighbors import KNeighborsClassifier
 from autoop.core.ml.artifact import Artifact
 from autoop.core.ml.model import Model
 from pydantic import PrivateAttr, Field
-import numpy as np
 
 
 class KNearestNeighbors(Model):
@@ -36,7 +35,7 @@ class KNearestNeighbors(Model):
             observations (np.ndarray): Feature matrix of shape (n_samples, n_features).
             ground_truth (np.ndarray): Target vector of shape (n_samples,).
         """
-        
+
         X = np.asarray(observations)
         self._model.fit(X, ground_truth)
         self._parameters = {
@@ -56,7 +55,6 @@ class KNearestNeighbors(Model):
             np.ndarray: Predicted class names of shape (n_samples,).
         """
         return self._model.predict(observations)
-
 
     def save(self, directory: str) -> None:
         """

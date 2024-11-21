@@ -5,6 +5,7 @@ import pandas as pd
 
 st.set_page_config(page_title="Deployment", page_icon="📈")
 
+
 def load_pipelines(directory: str) -> list:
     """
     Loads the list of saved pipelines from the specified directory.
@@ -21,6 +22,7 @@ def load_pipelines(directory: str) -> list:
             pipelines.append(os.path.join(directory, filename))
     return pipelines
 
+
 def load_pipeline(file_path: str):
     """
     Loads a pipeline from the specified file path.
@@ -31,19 +33,15 @@ def load_pipeline(file_path: str):
     Returns:
         dict: The loaded pipeline data.
     """
+    
     with open(file_path, 'rb') as file:
         pipeline_data = pickle.load(file)
-    #append the file path to the pipeline data
-    filename = os.path.basename(file_path)
-    # name, version = os.path.splitext(filename)[0].rsplit('_v', 1)
-    # pipeline_data["name"] = name
-    # pipeline_data["version"] = version
-
     return pipeline_data
+
 
 def show_pipeline_summary(pipeline_data: dict) -> None:
     """
-    Displays the summary of the selected pipeline.
+    Shows the summary of the selected pipeline.
 
     Args:
         pipeline_data (dict): The pipeline data to display.
@@ -63,11 +61,13 @@ def show_pipeline_summary(pipeline_data: dict) -> None:
     st.write(pipeline_data['model'])
     st.markdown("### Metrics")
     st.write(pipeline_data['metrics'])
-    st.markdown("### Dataset")
-    st.write(pipeline_data['dataset'])
+    #st.markdown("### Dataset")
+    #st.write(pipeline_data['dataset'])
     
-    
-def predict_with_pipeline(pipeline_data: dict, input_data: pd.DataFrame) -> pd.DataFrame:
+
+def predict_with_pipeline(
+    pipeline_data: dict, input_data: pd.DataFrame
+) -> pd.DataFrame:
     """
     Uses the loaded pipeline to perform predictions on the input data.
 
@@ -82,7 +82,9 @@ def predict_with_pipeline(pipeline_data: dict, input_data: pd.DataFrame) -> pd.D
     predictions = pipeline._model.predict(input_data)
     return pd.DataFrame(predictions, columns=['Prediction'])
 
+
 st.title("📈 Deployment")
+
 
 pipelines_directory = "assets/objects/pipelines"
 pipelines = load_pipelines(pipelines_directory)
@@ -94,5 +96,3 @@ if pipelines:
         show_pipeline_summary(pipeline_data)
 else:
     st.write("No saved pipelines found.")
-
-

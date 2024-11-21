@@ -4,6 +4,7 @@ from autoop.core.ml.artifact import Artifact
 import numpy as np
 from pydantic import PrivateAttr, Field
 
+
 class DecisionTreeClassificationModel(Model):
     """
     Decision Tree Classification model that uses scikit-learn's DecisionTreeClassifier

@@ -39,7 +39,7 @@ def initialize_automl() -> tuple[AutoMLSystem, list[Dataset]]:
     Initializes the AutoML system and retrieves the list of datasets.
 
     Returns:
-        tuple[AutoMLSystem, list[Dataset]]: The AutoML system instance and 
+        tuple[AutoMLSystem, list[Dataset]]: The AutoML system instance and
         the list of datasets.
     """
     automl = AutoMLSystem.get_instance()
@@ -61,7 +61,7 @@ def select_dataset(datasets: list[Dataset]) -> Dataset:
     selected_dataset_name = st.selectbox("Select a dataset", dataset_names)
     if selected_dataset_name:
         selected_dataset = next(
-            dataset for dataset in datasets if dataset._name == 
+            dataset for dataset in datasets if dataset._name ==
             selected_dataset_name
         )
         st.write(f"Selected dataset: {selected_dataset_name}")
@@ -71,26 +71,26 @@ def select_dataset(datasets: list[Dataset]) -> Dataset:
 
 def select_features(features: list[Feature]) -> tuple[list[Feature], Feature]:
     """
-    Allows the user to select input features and a target feature from the 
+    Allows the user to select input features and a target feature from the
     list of features.
 
     Args:
         features (list[Feature]): The list of available features.
 
     Returns:
-        tuple[list[Feature], Feature]: The selected input features and the 
+        tuple[list[Feature], Feature]: The selected input features and the
         target feature.
     """
     feature_names = [feature.name for feature in features]
 
-    input_features_names = st.multiselect("Select input features", 
+    input_features_names = st.multiselect("Select input features",
                                           feature_names)
 
-    input_features = [feature for feature in features if feature.name in 
+    input_features = [feature for feature in features if feature.name in
                       input_features_names]
 
     available_target_features = [
-        feature for feature in features if feature.name not in 
+        feature for feature in features if feature.name not in
         input_features_names
     ]
 
@@ -100,7 +100,7 @@ def select_features(features: list[Feature]) -> tuple[list[Feature], Feature]:
         key="target_feature",
     )
     target_feature = next(
-        feature for feature in available_target_features if feature.name == 
+        feature for feature in available_target_features if feature.name ==
         target_feature_name
     )
 
@@ -109,7 +109,7 @@ def select_features(features: list[Feature]) -> tuple[list[Feature], Feature]:
 
 def determine_task_type(features: list[Feature], target_feature: Feature) -> str:
     """
-    Determines the task type (classification or regression) based on the 
+    Determines the task type (classification or regression) based on the
     target feature type.
 
     Args:
@@ -141,7 +141,7 @@ def select_model(task_type: str) -> type:
         model_options = get_classification_models()
     else:
         model_options = get_regression_models()
-    selected_model_name = st.selectbox("Select a model", 
+    selected_model_name = st.selectbox("Select a model",
                                        list(model_options.keys()))
     selected_model_class = model_options[selected_model_name]
     st.write(f"Selected model: {selected_model_name}")
@@ -178,7 +178,7 @@ def select_split_ratio() -> float:
     Returns:
         float: The selected split ratio.
     """
-    split_ratio = st.slider("Select the split ratio (0.1 to 0.9)", 0.1, 0.9, 
+    split_ratio = st.slider("Select the split ratio (0.1 to 0.9)", 0.1, 0.9,
                             0.8)
     st.write(f"Selected split ratio: {split_ratio}")
     return split_ratio
@@ -212,7 +212,7 @@ def create_pipeline(
         raw = pd.read_csv(io.StringIO(raw.decode()))
 
     dataset = Dataset.from_dataframe(
-        raw, selected_dataset._name, selected_dataset._asset_path, 
+        raw, selected_dataset._name, selected_dataset._asset_path,
         selected_dataset._version
     )
 
@@ -226,6 +226,7 @@ def create_pipeline(
     )
 
     return pipeline
+
 
 def to_artifact(pipeline: Pipeline, name: str, version: str) -> Artifact:
     """
@@ -269,6 +270,7 @@ def to_artifact(pipeline: Pipeline, name: str, version: str) -> Artifact:
 
     return artifact
 
+
 Pipeline.to_artifact = to_artifact
     
 
@@ -285,7 +287,7 @@ def save_pipeline(pipeline: Pipeline) -> None:
 
     if st.button("Save Pipeline"):
         if pipeline_name and pipeline_version:
-            artifact = pipeline.to_artifact(name=pipeline_name, 
+            artifact = pipeline.to_artifact(name=pipeline_name,
                                             version=pipeline_version)
             artifact.save1("assets/objects/pipelines")
             st.success(f"Pipeline '{pipeline_name}' (version {pipeline_version}) saved successfully!")
@@ -322,6 +324,7 @@ if selected_dataset:
             split_ratio,
         )
 
+        # Display a summary of the pipeline
         st.subheader("Pipeline Summary")
         st.markdown("### Dataset")
         st.write(f"**Name:** {selected_dataset._name}")

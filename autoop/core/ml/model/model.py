@@ -5,11 +5,12 @@ from abc import ABC, abstractmethod
 from pydantic import BaseModel, PrivateAttr
 from copy import deepcopy
 
+
 class Model(BaseModel, ABC):
     """
     Abstract base class for all learning models.
 
-    Contains the standard fit and predict methods, and uses Artifact-like 
+    Contains the standard fit and predict methods, and uses Artifact-like
     functionality by internally managing an Artifact instance.
     
     Attributes:
@@ -21,11 +22,11 @@ class Model(BaseModel, ABC):
     _parameters: Dict = PrivateAttr(default_factory=dict)
     _artifact: Artifact = PrivateAttr()
     _type: str = PrivateAttr()
-    
+
     def __init__(
-        self, 
-        name: str, 
-        asset_path: str, 
+        self,
+        name: str,
+        asset_path: str,
         version: str,
         **data: Any,
     ) -> None:
@@ -126,7 +127,7 @@ class Model(BaseModel, ABC):
         Set the model parameters.
 
         Args:
-            **params (Any): Arbitrary keyword arguments representing model 
+            **params (Any): Arbitrary keyword arguments representing model
                 parameters.
         """
         for key, value in params.items():
@@ -137,7 +138,7 @@ class Model(BaseModel, ABC):
         Set the model hyperparameters.
 
         Args:
-            **hyperparams (Any): Arbitrary keyword arguments representing 
+            **hyperparams (Any): Arbitrary keyword arguments representing
                 hyperparameters.
         """
         for key, value in hyperparams.items():
@@ -169,7 +170,7 @@ class Model(BaseModel, ABC):
             bool: True if the model has been trained, False otherwise.
         """
         return bool(self._parameters)
-    
+
     @property
     def type(self) -> str:
         """
@@ -179,4 +180,3 @@ class Model(BaseModel, ABC):
             str: The type of the model.
         """
         return self._type
-    

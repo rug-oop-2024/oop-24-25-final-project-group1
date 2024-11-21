@@ -12,9 +12,9 @@ import numpy as np
 
 class Pipeline():
     
-    def __init__(self, 
+    def __init__(self,
                  metrics: List[Metric],
-                 dataset: Dataset, 
+                 dataset: Dataset,
                  model: Model,
                  input_features: List[Feature],
                  target_feature: Feature,
@@ -70,7 +70,7 @@ Pipeline(
         artifacts.append(Artifact(name="pipeline_config", data=pickle.dumps(pipeline_data)))
         artifacts.append(self._model.to_artifact(name=f"pipeline_model_{self._model.type}"))
         return artifacts
-    
+
     def _register_artifact(self, name: str, artifact):
         self._artifacts[name] = artifact
 
