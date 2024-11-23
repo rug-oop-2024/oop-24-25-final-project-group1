@@ -33,7 +33,7 @@ def load_pipeline(file_path: str):
     Returns:
         dict: The loaded pipeline data.
     """
-    
+
     with open(file_path, 'rb') as file:
         pipeline_data = pickle.load(file)
     return pipeline_data
@@ -61,9 +61,7 @@ def show_pipeline_summary(pipeline_data: dict) -> None:
     st.write(pipeline_data['model'])
     st.markdown("### Metrics")
     st.write(pipeline_data['metrics'])
-    #st.markdown("### Dataset")
-    #st.write(pipeline_data['dataset'])
-    
+
 
 def predict_with_pipeline(
     pipeline_data: dict, input_data: pd.DataFrame

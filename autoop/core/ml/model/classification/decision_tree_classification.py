@@ -7,24 +7,48 @@ from pydantic import PrivateAttr, Field
 
 class DecisionTreeClassificationModel(Model):
     """
-    Decision Tree Classification model that uses scikit-learn's DecisionTreeClassifier
-    to perform classification tasks.
+    Decision Tree Classification model that uses scikit-learn's
+    DecisionTreeClassifier to perform classification tasks.
 
     Attributes:
-    - _model (DecisionTreeClassifier): The decision tree classification model from
-      scikit-learn.
+        _model (DecisionTreeClassifier): The decision tree classification
+            model from scikit-learn.
+        max_depth (int): Maximum depth of the tree.
+        min_samples_split (int): Minimum number of samples required to
+            split an internal node.
     """
-    _model: DecisionTreeClassifier = PrivateAttr()
-    max_depth: int = Field(default=None, ge=1, description="Maximum depth of the tree")
-    min_samples_split: int = Field(default=2, ge=2, description="Minimum number of samples required to split an internal node")
 
-    def __init__(self, name: str = "test_model", asset_path: str = "./tmp", version: str = "0.1", **data):
+    _model: DecisionTreeClassifier = PrivateAttr()
+    max_depth: int = Field(
+        default=None,
+        ge=1,
+        description="Maximum depth of the tree"
+    )
+    min_samples_split: int = Field(
+        default=2,
+        ge=2,
+        description="Minimum number of samples required to "
+                    "split an internal node"
+    )
+
+    def __init__(
+        self,
+        name: str = "test_model",
+        asset_path: str = "./tmp",
+        version: str = "0.1",
+        **data
+    ) -> None:
         """
-        Initializes the Decision Tree Classification model with specified hyperparameters.
+        Initializes the Decision Tree Classification model
+        with specified hyperparameters.
 
         Args:
-            max_depth (int): The maximum depth of the tree (default: None).
-            min_samples_split (int): The minimum number of samples required to split an internal node (default: 2).
+            name (str): The name of the model.
+                Defaults to "test_model".
+            asset_path (str): Path to store model artifacts.
+                Defaults to "./tmp".
+            version (str): Version of the model. Defaults to "0.1".
+            **data: Additional hyperparameters for the model.
         """
         super().__init__(name=name, asset_path=asset_path, version=version, **data)
         self._model = DecisionTreeClassifier(
@@ -39,11 +63,14 @@ class DecisionTreeClassificationModel(Model):
 
     def fit(self, observations: np.ndarray, ground_truth: np.ndarray) -> None:
         """
-        Fits the Decision Tree Classification model to the provided training data.
+        Fits the Decision Tree Classification model
+        to the provided training data.
 
         Args:
-            observations (np.ndarray): Feature matrix of shape (n_samples, p_features).
-            ground_truth (np.ndarray): Target vector of shape (n_samples,).
+            observations (np.ndarray): Feature matrix of
+                shape (n_samples, p_features).
+            ground_truth (np.ndarray): Target vector of
+                shape (n_samples,).
         """
         self._model.fit(observations, ground_truth)
         self._parameters['tree_structure'] = self._model.tree_
@@ -54,7 +81,8 @@ class DecisionTreeClassificationModel(Model):
         Predicts the class labels for the provided observations.
 
         Args:
-            observations (np.ndarray): Feature matrix of shape (n_samples, p_features).
+            observations (np.ndarray): Feature matrix of
+                shape (n_samples, p_features).
 
         Returns:
             np.ndarray: Predicted class labels of shape (n_samples,).
@@ -81,7 +109,8 @@ class DecisionTreeClassificationModel(Model):
 
         Args:
             directory (str): The directory where the model is stored.
-            artifact_id (str): The unique ID of the model artifact to be loaded.
+            artifact_id (str): The unique ID of the model
+                artifact to be loaded.
         """
         loaded_artifact = Artifact.load(directory, artifact_id)
         model_data = eval(loaded_artifact.data.decode())

@@ -3,14 +3,18 @@ from typing import Any
 import numpy as np
 
 
-def get_metric(name: str):
+def get_metric(name: str) -> 'Metric':
     """
     Factory function to get a metric by name.
+
     Args:
         name (str): The name of the metric to retrieve.
 
     Returns:
         Metric: An instance of a metric class corresponding to the name.
+
+    Raises:
+        ValueError: If the metric name is not recognized.
     """
     if name == "Mean Squared Error":
         return MeanSquaredError()
@@ -26,6 +30,7 @@ def get_metric(name: str):
         return MeanAbsoluteError()
     else:
         raise ValueError(f"Unknown metric: {name}")
+
 
 class Metric(ABC):
     """
@@ -46,9 +51,9 @@ class Metric(ABC):
             float: The computed metric value.
         """
         pass
-    
+
     @abstractmethod
-    def __str__(self):
+    def __str__(self) -> str:
         """
         Return a string representation of the metric.
 
@@ -56,7 +61,7 @@ class Metric(ABC):
             str: The string representation of the metric.
         """
         pass
-    
+
     def evaluate(self, ground_truth: Any, prediction: Any) -> float:
         """
         Evaluate the metric by calculating the value and printing a summary.
@@ -71,12 +76,13 @@ class Metric(ABC):
         result = self.__call__(ground_truth, prediction)
         print(f"Evaluating {self.__class__.__name__}: {result:.4f}")
         return result
-        
+
 
 class MeanSquaredError(Metric):
     """
     Implementation of Mean Squared Error (MSE) metric.
     """
+
     def __call__(self, ground_truth: np.ndarray, prediction: np.ndarray) -> float:
         """
         Calculate the Mean Squared Error between ground truth and predictions.
@@ -90,14 +96,16 @@ class MeanSquaredError(Metric):
         """
         error = np.mean((ground_truth - prediction) ** 2)
         return error
-    
-    def __str__(self):
+
+    def __str__(self) -> str:
         return "Mean Squared Error"
+
 
 class Accuracy(Metric):
     """
     Implementation of Accuracy metric for multi-class classification tasks.
     """
+
     def __call__(self, ground_truth: np.ndarray, prediction: np.ndarray) -> float:
         """
         Calculate the accuracy by comparing ground truth and predictions.
@@ -112,14 +120,16 @@ class Accuracy(Metric):
         correct_predictions = np.sum(ground_truth == prediction)
         accuracy = correct_predictions / len(ground_truth)
         return accuracy
-    
-    def __str__(self):
+
+    def __str__(self) -> str:
         return "Accuracy"
+
 
 class BalancedAccuracy(Metric):
     """
     Implementation of Balanced Accuracy metric for classification tasks.
     """
+
     def __call__(self, ground_truth: np.ndarray, prediction: np.ndarray) -> float:
         """
         Calculate the Balanced Accuracy by averaging the recall for each class.
@@ -142,58 +152,61 @@ class BalancedAccuracy(Metric):
                 recalls.append(true_positive / (true_positive + false_negative))
         balanced_accuracy = np.mean(recalls)
         return balanced_accuracy
-    
-    def __str__(self):
+
+    def __str__(self) -> str:
         return "Balanced Accuracy"
 
-    
+
 class MacroPrecision(Metric):
-    """Class for MacroPrecision. Inherits from Metric
+    """
+    Implementation of Macro Precision metric for classification tasks.
     """
 
     def __call__(self, true_labels: np.ndarray, predicted_labels: np.ndarray) -> float:
-        """Calculates the Macro Precision using the __call__ method.
+        """
+        Calculate the Macro Precision.
 
         Args:
-            true_labels (np.ndarray): True Values
-            predicted_labels (np.ndarray): Predicted Values
+            true_labels (np.ndarray): The true values.
+            predicted_labels (np.ndarray): The predicted values.
 
         Returns:
-            float: Calculated Macro Precision
+            float: The computed Macro Precision.
         """
         classes = np.unique(true_labels)
         precision_values = [
             self._calculate_precision_for_class(true_labels, predicted_labels, label)
             for label in classes
         ]
-
         return np.mean(precision_values)
 
-    def _calculate_precision_for_class(self, true_labels, predicted_labels, label):
-        """Helper function to calculate precision for a specific class.
+    def _calculate_precision_for_class(
+        self, true_labels: np.ndarray, predicted_labels: np.ndarray, label: Any
+    ) -> float:
+        """
+        Helper function to calculate precision for a specific class.
 
         Args:
-            true_labels (np.ndarray): True Values
-            predicted_labels (np.ndarray): Predicted Values
-            label: The class label to calculate precision for
+            true_labels (np.ndarray): The true values.
+            predicted_labels (np.ndarray): The predicted values.
+            label (Any): The class label to calculate precision for.
 
         Returns:
-            float: Precision value for the specified class
+            float: Precision value for the specified class.
         """
         true_positives = np.sum((predicted_labels == label) & (true_labels == label))
         total_predicted = np.sum(predicted_labels == label)
-
         return true_positives / total_predicted if total_predicted > 0 else 0.0
-    
-    def __str__(self):
+
+    def __str__(self) -> str:
         return "Macro Precision"
 
-    
 
 class R2Score(Metric):
     """
     Implementation of R-squared (R²) metric for regression tasks.
     """
+
     def __call__(self, ground_truth: np.ndarray, prediction: np.ndarray) -> float:
         """
         Calculate the R-squared (R²) value between ground truth and predictions.
@@ -209,14 +222,16 @@ class R2Score(Metric):
         ss_residual = np.sum((ground_truth - prediction) ** 2)
         r2_score = 1 - (ss_residual / ss_total)
         return r2_score
-    
-    def __str__(self):
+
+    def __str__(self) -> str:
         return "R² Score"
+
 
 class MeanAbsoluteError(Metric):
     """
     Implementation of Mean Absolute Error (MAE) metric for regression tasks.
     """
+
     def __call__(self, ground_truth: np.ndarray, prediction: np.ndarray) -> float:
         """
         Calculate the Mean Absolute Error between ground truth and predictions.
@@ -230,8 +245,8 @@ class MeanAbsoluteError(Metric):
         """
         error = np.mean(np.abs(ground_truth - prediction))
         return error
-    
-    def __str__(self):
+
+    def __str__(self) -> str:
         return "Mean Absolute Error"
 
 
@@ -240,7 +255,7 @@ def get_regression_metrics() -> list[Metric]:
     Get a list of regression metrics.
 
     Returns:
-        List[Metric]: A list of regression metrics.
+        list[Metric]: A list of regression metrics.
     """
     return [MeanSquaredError(), R2Score(), MeanAbsoluteError()]
 
@@ -250,6 +265,6 @@ def get_classification_metrics() -> list[Metric]:
     Get a list of classification metrics.
 
     Returns:
-        List[Metric]: A list of classification metrics.
+        list[Metric]: A list of classification metrics.
     """
     return [Accuracy(), BalancedAccuracy(), MacroPrecision()]

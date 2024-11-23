@@ -6,7 +6,7 @@ from abc import ABC
 
 
 class Artifact(ABC):
-    """Abstract base class representing an asset that can be stored and 
+    """Abstract base class representing an asset that can be stored and
     contains information about this specific asset."""
 
     _id_iter = itertools.count()
@@ -29,11 +29,13 @@ class Artifact(ABC):
             name (str): The name of the asset.
             asset_path (str): The path where the asset is stored.
             version (str): The version of the asset.
-            data (bytes, optional): The binary data of the asset. Defaults to None.
-            metadata (dict, optional): A dictionary containing additional metadata
-                about the asset. Defaults to an empty dictionary if None.
-            type (str, optional): The type of the asset, such as "model:torch"
-                or "dataset". Defaults to an empty string.
+            data (bytes, optional): The binary data of the asset.
+                Defaults to None.
+            metadata (dict, optional): A dictionary containing additional
+                metadata about the asset.
+                Defaults to an empty dictionary if None.
+            type (str, optional): The type of the asset.
+                Defaults to an empty string.
             tags (list, optional): A list of tags describing the asset.
                 Defaults to an empty list if None.
         """
@@ -48,34 +50,42 @@ class Artifact(ABC):
 
     @property
     def name(self) -> str:
+        """Gets the name of the artifact."""
         return self._name
 
     @property
     def asset_path(self) -> str:
+        """Gets the asset path of the artifact."""
         return self._asset_path
 
     @property
     def version(self) -> str:
+        """Gets the version of the artifact."""
         return self._version
 
     @property
     def data(self) -> bytes:
+        """Gets the binary data of the artifact."""
         return self._data
 
     @property
     def metadata(self) -> dict:
+        """Gets the metadata of the artifact."""
         return self._metadata
 
     @property
     def type(self) -> str:
+        """Gets the type of the artifact."""
         return self._type
 
     @property
     def tags(self) -> list:
+        """Gets the tags associated with the artifact."""
         return self._tags
 
     @property
     def id(self) -> str:
+        """Gets the unique ID of the artifact."""
         return self._id
 
     def save1(self, directory: str) -> None:
@@ -90,7 +100,7 @@ class Artifact(ABC):
 
         if not os.path.exists(directory):
             os.makedirs(directory)
-        with open(f"{directory + "/" + self._asset_path}", 'wb') as file:
+        with open(f"{directory + '/' + self._asset_path}", 'wb') as file:
             file.write(self._data)
 
     def read(self) -> bytes:
@@ -116,7 +126,8 @@ class Artifact(ABC):
                 return file.read()
         except FileNotFoundError:
             raise FileNotFoundError(
-                f"The file at path {self._base_path + self._asset_path} could not be found."
+                f"The file at path {self._base_path + self._asset_path} "
+                f"could not be found."
             )
 
     def get_id(self) -> str:

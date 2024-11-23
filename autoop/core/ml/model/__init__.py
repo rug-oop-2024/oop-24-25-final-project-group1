@@ -1,11 +1,22 @@
-
 from autoop.core.ml.model.model import Model
-from autoop.core.ml.model.regression.mulitple_linear_regression import MultipleLinearRegression
-from autoop.core.ml.model.regression.decision_tree import DecisionTreeRegressionModel
-from autoop.core.ml.model.regression.lasso_regression import LassoRegressionModel
-from autoop.core.ml.model.classification.knn import KNearestNeighbors
-from autoop.core.ml.model.classification.decision_tree_classification import DecisionTreeClassificationModel
-from autoop.core.ml.model.classification.random_forest import RandomForestClassifierModel
+from autoop.core.ml.model.regression.mulitple_linear_regression import (
+    MultipleLinearRegression
+)
+from autoop.core.ml.model.regression.decision_tree import (
+    DecisionTreeRegressionModel
+)
+from autoop.core.ml.model.regression.lasso_regression import (
+    LassoRegressionModel
+)
+from autoop.core.ml.model.classification.knn import (
+    KNearestNeighbors
+)
+from autoop.core.ml.model.classification.decision_tree_classification import (
+    DecisionTreeClassificationModel
+)
+from autoop.core.ml.model.classification.random_forest import (
+    RandomForestClassifierModel
+)
 
 REGRESSION_MODELS = [
     "MultipleLinearRegression",
@@ -35,4 +46,5 @@ def get_model(model_name: str) -> Model:
     elif model_name == "RandomForestModel":
         return RandomForestClassifierModel()
     else:
-        raise ValueError(f"'{model_name}' is not recognized. Please use a valid model name.")
+        raise ValueError(f"'{model_name}' is not recognized. 
+                            Please use a valid model name.")

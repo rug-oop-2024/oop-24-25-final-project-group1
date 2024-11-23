@@ -7,19 +7,34 @@ from pydantic import PrivateAttr, Field
 
 class KNearestNeighbors(Model):
     """
-    This K-Nearest Neighbors (KNN) model implementation classifies
+    K-Nearest Neighbors (KNN) model implementation classifies
     an observation by analyzing the classes of its `k` nearest neighbors.
 
     Attributes:
-    - k (int): The number of nearest neighbors to consider when making predictions.
+        k (int): Number of nearest neighbors to consider.
     """
+
     k: int = Field(default=3, ge=1, description="Number of neighbors")
     _model: KNeighborsClassifier = PrivateAttr()
     _parameters: dict = PrivateAttr(default_factory=dict)
 
-    def __init__(self, k=3, name: str = "test_model", asset_path: str = "./tmp", version: str = "0.1", **data):
+    def __init__(
+        self,
+        k: int = 3,
+        name: str = "test_model",
+        asset_path: str = "./tmp",
+        version: str = "0.1",
+        **data
+    ) -> None:
         """
-        Initializes the KNN model with a value of "k".
+        Initializes the KNN model with a specified value of "k".
+
+        Args:
+            k (int, optional): Number of neighbors. Defaults to 3.
+            name (str, optional): Name of the model. Defaults to "test_model".
+            asset_path (str, optional): Path to store model artifacts. Defaults to "./tmp".
+            version (str, optional): Version of the model. Defaults to "0.1".
+            **data: Additional data for initialization.
         """
         super().__init__(name=name, asset_path=asset_path, version=version, **data)
         self.k = k
@@ -35,7 +50,6 @@ class KNearestNeighbors(Model):
             observations (np.ndarray): Feature matrix of shape (n_samples, n_features).
             ground_truth (np.ndarray): Target vector of shape (n_samples,).
         """
-
         X = np.asarray(observations)
         self._model.fit(X, ground_truth)
         self._parameters = {
@@ -52,7 +66,7 @@ class KNearestNeighbors(Model):
             observations (np.ndarray): Feature matrix of shape (n_samples, n_features).
 
         Returns:
-            np.ndarray: Predicted class names of shape (n_samples,).
+            np.ndarray: Predicted class labels of shape (n_samples,).
         """
         return self._model.predict(observations)
 
@@ -83,4 +97,7 @@ class KNearestNeighbors(Model):
         self.k = self._parameters.get('k', 3)
         self._model = KNeighborsClassifier(n_neighbors=self.k)
         if "observations" in self._parameters and "ground_truth" in self._parameters:
-            self._model.fit(self._parameters["observations"], self._parameters["ground_truth"])
+            self._model.fit(
+                self._parameters["observations"],
+                self._parameters["ground_truth"]
+            )

@@ -10,7 +10,7 @@ automl = AutoMLSystem.get_instance()
 def handle_file_upload() -> None:
     """
     Handles the file upload process for CSV files. Users can upload a CSV file,
-    view its contents, and save it as a dataset with a specified name and 
+    view its contents, and save it as a dataset with a specified name and
     version.
     """
     uploaded_file = st.file_uploader("Choose a CSV file", type="csv")
@@ -19,7 +19,9 @@ def handle_file_upload() -> None:
             data = pd.read_csv(uploaded_file, on_bad_lines='skip')
             st.write(data)
 
-            dataset_name = st.text_input("Enter dataset name:", value="MyDataset")
+            dataset_name = st.text_input(
+                "Enter dataset name:", value="MyDataset"
+            )
             version = st.text_input("Enter version:", value="1.0.0")
 
             asset_base_dir = "datasets"

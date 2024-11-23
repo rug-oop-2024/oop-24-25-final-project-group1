@@ -14,25 +14,36 @@ class MultipleLinearRegression(Model):
     a target variable (ground truth).
 
     Attributes:
-    - _weights (np.ndarray): Stores the coefficients (weights) and intercept
-      of the model.
+        _weights (np.ndarray): Stores the coefficients (weights) and intercept
+            of the model.
+        _artifact (Artifact): Manages the model artifact.
     """
+
     _weights: np.ndarray = PrivateAttr(default=None)
     _artifact: Artifact = PrivateAttr(default=None)
 
-    def __init__(self, name: str = "test_model", asset_path: str = "./tmp", version: str = "0.1", regularization: float = 0.0, **data):
+    def __init__(
+        self,
+        name: str = "test_model",
+        asset_path: str = "./tmp",
+        version: str = "0.1",
+        regularization: float = 0.0,
+        **data,
+    ) -> None:
         """
-        Initializes the Multiple Linear Regression model with test-friendly defaults.
+        Initializes the Multiple Linear Regression model with test-friendly
+        defaults.
 
         Args:
             name (str): Model name, default "test_model" for testing.
             asset_path (str): Model asset path, default "./tmp".
             version (str): Model version, default "0.1".
             regularization (float): Regularization strength (default: 0.0).
+            **data: Additional parameters for the model.
         """
         super().__init__(name=name, asset_path=asset_path, version=version, **data)
         self._parameters = {
-            "regularization": regularization
+            "regularization": regularization,
         }
         self._type = "regression"
 
@@ -40,20 +51,23 @@ class MultipleLinearRegression(Model):
     def weights(self) -> Dict:
         """
         Returns a copy of the model weights.
+
+        Returns:
+            Dict: Copy of the weights, or None if the model is not trained.
         """
         return self._weights.copy() if self._weights is not None else None
 
     def fit(self, observations: np.ndarray, ground_truth: np.ndarray) -> None:
         """
         Fits the multiple linear regression model to the provided training data.
-        Applies L2 regularization if the regularization parameter is greater than 0.
+        Applies L2 regularization if the regularization parameter is greater
+        than 0.
 
         Args:
-            observations (np.ndarray): Feature matrix of shape (n_samples,
-            p_features).
+            observations (np.ndarray): Feature matrix of shape (n_samples, p_features).
             ground_truth (np.ndarray): Target vector of shape (n_samples,).
         """
-        regularization = self._parameters.get('regularization', 0.0)
+        regularization = self._parameters.get("regularization", 0.0)
         observations_b: np.ndarray = np.c_[
             observations, np.ones(observations.shape[0])
         ]
@@ -69,7 +83,7 @@ class MultipleLinearRegression(Model):
         try:
             XtX_inv = np.linalg.pinv(XtX)
             self._weights = np.matmul(XtX_inv, XtY)
-            self._parameters['weights'] = self._weights
+            self._parameters["weights"] = self._weights
         except np.linalg.LinAlgError as e:
             raise ValueError(f"Error inverting matrix during training: {e}")
 
@@ -78,14 +92,18 @@ class MultipleLinearRegression(Model):
         Predicts the values for the provided observations.
 
         Args:
-            observations (np.ndarray): Feature matrix of shape (n_samples,
-            p_features).
+            observations (np.ndarray): Feature matrix of shape (n_samples, p_features).
 
         Returns:
             np.ndarray: Predicted values of shape (n_samples,).
+
+        Raises:
+            ValueError: If the model is not trained.
         """
         if self._weights is None:
-            raise ValueError("Model has not been trained yet. Please fit the model before predicting.")
+            raise ValueError(
+                "Model has not been trained yet. Please fit the model before predicting."
+            )
 
         observations_b = np.c_[
             observations, np.ones(observations.shape[0])
@@ -105,11 +123,11 @@ class MultipleLinearRegression(Model):
             data=b"",
             metadata={},
             type_="model:regression",
-            tags=["multiple_linear_regression"]
+            tags=["multiple_linear_regression"],
         )
 
         model_data = {
-            'parameters': self._parameters
+            "parameters": self._parameters,
         }
         self._artifact.data = str(model_data).encode()
 
@@ -129,10 +147,11 @@ class MultipleLinearRegression(Model):
             data=b"",
             metadata={},
             type_="model:regression",
-            tags=["multiple_linear_regression"]
+            tags=["multiple_linear_regression"],
         )
 
         loaded_data = self._artifact.read()
         model_data = eval(loaded_data.decode())
-        self._parameters = model_data['parameters']
-        self._weights = self._parameters.get('weights')
+        self._parameters = model_data["parameters"]
+        self._weights = self._parameters.get("weights")
+        self._artifact.asset_path = f"{directory}/{artifact_id}.bin"

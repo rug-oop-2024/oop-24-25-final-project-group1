@@ -83,11 +83,14 @@ def select_features(features: list[Feature]) -> tuple[list[Feature], Feature]:
     """
     feature_names = [feature.name for feature in features]
 
-    input_features_names = st.multiselect("Select input features",
-                                          feature_names)
+    input_features_names = st.multiselect(
+        "Select input features", feature_names
+    )
 
-    input_features = [feature for feature in features if feature.name in
-                      input_features_names]
+    input_features = [
+        feature for feature in features if feature.name in
+        input_features_names
+    ]
 
     available_target_features = [
         feature for feature in features if feature.name not in
@@ -107,7 +110,9 @@ def select_features(features: list[Feature]) -> tuple[list[Feature], Feature]:
     return input_features, target_feature
 
 
-def determine_task_type(features: list[Feature], target_feature: Feature) -> str:
+def determine_task_type(
+    features: list[Feature], target_feature: Feature
+) -> str:
     """
     Determines the task type (classification or regression) based on the
     target feature type.
@@ -124,7 +129,9 @@ def determine_task_type(features: list[Feature], target_feature: Feature) -> str
     elif target_feature.type == "numerical":
         return "regression"
     else:
-        raise ValueError(f"Unsupported target feature type: {target_feature.type}")
+        raise ValueError(
+            f"Unsupported target feature type: {target_feature.type}"
+        )
 
 
 def select_model(task_type: str) -> type:
@@ -141,8 +148,9 @@ def select_model(task_type: str) -> type:
         model_options = get_classification_models()
     else:
         model_options = get_regression_models()
-    selected_model_name = st.selectbox("Select a model",
-                                       list(model_options.keys()))
+    selected_model_name = st.selectbox(
+        "Select a model", list(model_options.keys())
+    )
     selected_model_class = model_options[selected_model_name]
     st.write(f"Selected model: {selected_model_name}")
     return selected_model_class
@@ -164,10 +172,14 @@ def select_metrics(task_type: str):
         available_metrics = get_regression_metrics()
 
     selected_metrics_names = st.multiselect(
-        "Select metrics", [metric.__str__() for metric in available_metrics]
+        "Select metrics",
+        [metric.__str__() for metric in available_metrics]
     )
     selected_metrics = [get_metric(name) for name in selected_metrics_names]
-    st.write(f"Selected metrics: {[metric.__str__() for metric in selected_metrics]}")
+    st.write(
+        "Selected metrics: "
+        f"{[metric.__str__() for metric in selected_metrics]}"
+    )
     return selected_metrics, selected_metrics_names
 
 
@@ -178,8 +190,9 @@ def select_split_ratio() -> float:
     Returns:
         float: The selected split ratio.
     """
-    split_ratio = st.slider("Select the split ratio (0.1 to 0.9)", 0.1, 0.9,
-                            0.8)
+    split_ratio = st.slider(
+        "Select the split ratio (0.1 to 0.9)", 0.1, 0.9, 0.8
+    )
     st.write(f"Selected split ratio: {split_ratio}")
     return split_ratio
 
@@ -257,11 +270,15 @@ def to_artifact(pipeline: Pipeline, name: str, version: str) -> Artifact:
         version=version,
         data=pipeline_data,
         metadata={
-            "input_features": [feature.name for feature in pipeline._input_features],
+            "input_features": [
+                feature.name for feature in pipeline._input_features
+            ],
             "target_feature": pipeline._target_feature.name,
             "split": pipeline._split,
             "model_type": pipeline._model.type,
-            "metrics": [metric.__str__() for metric in pipeline._metrics],
+            "metrics": [
+                metric.__str__() for metric in pipeline._metrics
+            ],
             "dataset_name": pipeline._dataset._name
         },
         type="pipeline",
@@ -272,7 +289,7 @@ def to_artifact(pipeline: Pipeline, name: str, version: str) -> Artifact:
 
 
 Pipeline.to_artifact = to_artifact
-    
+
 
 def save_pipeline(pipeline: Pipeline) -> None:
     """
@@ -287,16 +304,24 @@ def save_pipeline(pipeline: Pipeline) -> None:
 
     if st.button("Save Pipeline"):
         if pipeline_name and pipeline_version:
-            artifact = pipeline.to_artifact(name=pipeline_name,
-                                            version=pipeline_version)
+            artifact = pipeline.to_artifact(
+                name=pipeline_name, version=pipeline_version
+            )
             artifact.save1("assets/objects/pipelines")
-            st.success(f"Pipeline '{pipeline_name}' (version {pipeline_version}) saved successfully!")
+            st.success(
+                f"Pipeline '{pipeline_name}' (version {pipeline_version}) "
+                "saved successfully!"
+            )
         else:
-            st.error("Please provide both a name and a version for the pipeline.")
+            st.error(
+                "Please provide both a name and a version for the pipeline."
+            )
 
 
 st.title("⚙ Modelling")
-write_helper_text("This is a Machine Learning pipeline that trains a model on a dataset.")
+write_helper_text(
+    "This is a Machine Learning pipeline that trains a model on a dataset."
+)
 
 automl, datasets = initialize_automl()
 selected_dataset = select_dataset(datasets)
@@ -329,7 +354,10 @@ if selected_dataset:
         st.markdown("### Dataset")
         st.write(f"**Name:** {selected_dataset._name}")
         st.markdown("### Features")
-        st.write(f"**Input Features:** {', '.join([feature.name for feature in input_features])}")
+        st.write(
+            "**Input Features:** "
+            f"{', '.join([feature.name for feature in input_features])}"
+        )
         st.write(f"**Target Feature:** {target_feature.name}")
         st.markdown("### Model")
         st.write(f"**Model:** {model.__class__.__name__}")

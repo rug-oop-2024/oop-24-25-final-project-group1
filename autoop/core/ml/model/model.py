@@ -10,13 +10,13 @@ class Model(BaseModel, ABC):
     """
     Abstract base class for all learning models.
 
-    Contains the standard fit and predict methods, and uses Artifact-like
-    functionality by internally managing an Artifact instance.
-    
+    This class defines the standard structure for machine learning models, 
+    including methods for fitting, predicting, saving, and loading models.
+
     Attributes:
         _parameters (Dict): Stores model-specific parameters.
-        _hyperparameters (Dict): Stores model-specific hyperparameters.
         _artifact (Artifact): Manages the artifact for the model.
+        _type (str): The type of the model (e.g., classification, regression).
     """
 
     _parameters: Dict = PrivateAttr(default_factory=dict)
@@ -56,19 +56,9 @@ class Model(BaseModel, ABC):
         Returns a deepcopy of the model parameters.
 
         Returns:
-            Dict: Deepcopy of the model parameters.
+            Dict: A deepcopy of the model parameters.
         """
         return deepcopy(self._parameters)
-
-    @property
-    def hyperparameters(self) -> Dict:
-        """
-        Returns a deepcopy of the model hyperparameters.
-
-        Returns:
-            Dict: Deepcopy of the model hyperparameters.
-        """
-        return deepcopy(self._hyperparameters)
 
     @abstractmethod
     def fit(self, observations: np.ndarray, ground_truth: np.ndarray) -> None:
@@ -76,8 +66,8 @@ class Model(BaseModel, ABC):
         Fits the model to the provided training data.
 
         Args:
-            observations (np.ndarray): Feature matrix (n_samples, n_features).
-            ground_truth (np.ndarray): Target vector (n_samples,).
+            observations (np.ndarray): Feature matrix of shape (n_samples, n_features).
+            ground_truth (np.ndarray): Target vector of shape (n_samples,).
         """
         pass
 
@@ -87,10 +77,10 @@ class Model(BaseModel, ABC):
         Predicts the values for the provided observations.
 
         Args:
-            observations (np.ndarray): Feature matrix (n_samples, n_features).
+            observations (np.ndarray): Feature matrix of shape (n_samples, n_features).
 
         Returns:
-            np.ndarray: Predicted values (n_samples,).
+            np.ndarray: Predicted values of shape (n_samples,).
         """
         pass
 
@@ -99,12 +89,9 @@ class Model(BaseModel, ABC):
         Save the model using the Artifact class.
 
         Args:
-            directory (str): Directory where the model should be saved.
+            directory (str): The directory where the model should be saved.
         """
-        model_data = {
-            'parameters': self._parameters,
-            'hyperparameters': self._hyperparameters
-        }
+        model_data = {"parameters": self._parameters}
         self._artifact.data = str(model_data).encode()
         self._artifact.asset_path = f"{directory}/{self._artifact.name}.bin"
 
@@ -113,14 +100,13 @@ class Model(BaseModel, ABC):
         Load the model using the Artifact class.
 
         Args:
-            directory (str): Directory where the model is stored.
+            directory (str): The directory where the model is stored.
             artifact_id (str): Unique ID of the model artifact to be loaded.
         """
         self._artifact.asset_path = f"{directory}/{artifact_id}.bin"
         loaded_data = self._artifact.read()
         model_data = eval(loaded_data.decode())
-        self._parameters = model_data.get('parameters', {})
-        self._hyperparameters = model_data.get('hyperparameters', {})
+        self._parameters = model_data.get("parameters", {})
 
     def set_params(self, **params: Any) -> None:
         """
@@ -133,17 +119,6 @@ class Model(BaseModel, ABC):
         for key, value in params.items():
             self._parameters[key] = value
 
-    def set_hyperparams(self, **hyperparams: Any) -> None:
-        """
-        Set the model hyperparameters.
-
-        Args:
-            **hyperparams (Any): Arbitrary keyword arguments representing
-                hyperparameters.
-        """
-        for key, value in hyperparams.items():
-            self._hyperparameters[key] = value
-
     def get_params(self) -> Dict:
         """
         Get the model parameters.
@@ -152,15 +127,6 @@ class Model(BaseModel, ABC):
             Dict: The current model parameters.
         """
         return self.parameters
-
-    def get_hyperparams(self) -> Dict:
-        """
-        Get the model hyperparameters.
-
-        Returns:
-            Dict: The current model hyperparameters.
-        """
-        return self.hyperparameters
 
     def is_trained(self) -> bool:
         """

@@ -12,21 +12,27 @@ def detect_feature_types(dataset: Dataset) -> List[Feature]:
         dataset: Dataset - an instance of Dataset containing the data.
 
     Returns:
-        List[Feature]: A list of Feature objects with their detected types (categorical or numerical).
+        List[Feature]: A list of Feature objects with their detected
+            types (categorical or numerical).
     """
     
     if dataset.data is None:
-        raise ValueError("The Dataset object does not contain any valid data. Please ensure that the dataset is properly initialized with data.")
+        raise ValueError("The Dataset object does not contain any valid data. "
+                         "Please ensure that the dataset is properly "
+                         "initialized with data.")
 
     if not isinstance(dataset.data, (str, bytes)):
-        raise TypeError("The Dataset object's data should be of type str or bytes.")
+        raise TypeError("The Dataset object's data should be "
+                        "of type str or bytes.")
     
     csv_data = dataset.data.decode("utf-8")
     data = pd.read_csv(io.StringIO(csv_data))
     features = []
 
     for column in data.columns:
-        feature_type = "categorical" if data[column].dtype == "object" else "numerical"
+        feature_type = (
+            "categorical" if data[column].dtype == "object" else "numerical"
+        )
         features.append(Feature(name=column, type=feature_type))
-    
+
     return features
