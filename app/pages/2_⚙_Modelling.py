@@ -106,7 +106,7 @@ def select_features(features: list[Feature]) -> tuple[list[Feature], Feature]:
         feature for feature in available_target_features
         if feature.name == target_feature_name
     )
- 
+
     return input_features, target_feature
 
 
