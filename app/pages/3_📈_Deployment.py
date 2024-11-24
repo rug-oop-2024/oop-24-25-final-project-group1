@@ -142,7 +142,7 @@ if pipelines:
 
                 predictions = predict_with_pipeline(
                     pipeline_data, prediction_data
-                    )
+                )
                 st.write("### Prediction Results")
                 st.dataframe(predictions)
 

@@ -61,8 +61,8 @@ def select_dataset(datasets: list[Dataset]) -> Dataset:
     selected_dataset_name = st.selectbox("Select a dataset", dataset_names)
     if selected_dataset_name:
         selected_dataset = next(
-            dataset for dataset in datasets if dataset._name ==
-            selected_dataset_name
+            dataset for dataset in datasets if dataset._name
+            == selected_dataset_name
         )
         st.write(f"Selected dataset: {selected_dataset_name}")
         return selected_dataset
@@ -103,8 +103,8 @@ def select_features(features: list[Feature]) -> tuple[list[Feature], Feature]:
         key="target_feature",
     )
     target_feature = next(
-        feature for feature in available_target_features if feature.name ==
-        target_feature_name
+        feature for feature in available_target_features if feature.name
+        == target_feature_name
     )
 
     return input_features, target_feature
@@ -156,7 +156,7 @@ def select_model(task_type: str) -> type:
     return selected_model_class
 
 
-def select_metrics(task_type: str):
+def select_metrics(task_type: str) -> tuple[list, list[str]]:
     """
     Allows the user to select metrics based on the task type.
 
@@ -164,7 +164,7 @@ def select_metrics(task_type: str):
         task_type (str): The task type ("classification" or "regression").
 
     Returns:
-        tuple[list[Metric], list[str]]: The selected metrics and their names.
+        tuple[list, list[str]]: The selected metrics and their names.
     """
     if task_type == "classification":
         available_metrics = get_classification_metrics()
@@ -198,12 +198,12 @@ def select_split_ratio() -> float:
 
 
 def create_pipeline(
-    selected_dataset,
+    selected_dataset: Dataset,
     input_features: list[Feature],
     target_feature: Feature,
-    model,
-    selected_metrics,
-    split_ratio,
+    model: type,
+    selected_metrics: list,
+    split_ratio: float,
 ) -> Pipeline:
     """
     Creates a pipeline with the selected parameters.
@@ -212,9 +212,9 @@ def create_pipeline(
         selected_dataset (Dataset): The selected dataset.
         input_features (list[Feature]): The selected input features.
         target_feature (Feature): The selected target feature.
-        model: The selected model.
-        selected_metrics: The selected metrics.
-        split_ratio: The selected split ratio.
+        model (type): The selected model.
+        selected_metrics (list): The selected metrics.
+        split_ratio (float): The selected split ratio.
 
     Returns:
         Pipeline: The created pipeline.

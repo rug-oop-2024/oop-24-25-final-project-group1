@@ -1,6 +1,6 @@
 from autoop.core.ml.artifact import Artifact
 import numpy as np
-from typing import Dict, Any
+from typing import Dict, Union, List
 from abc import ABC, abstractmethod
 from pydantic import BaseModel, PrivateAttr
 from copy import deepcopy
@@ -28,7 +28,7 @@ class Model(BaseModel, ABC):
         name: str,
         asset_path: str,
         version: str,
-        **data: Any,
+        **data: Dict[str, Union[str, int, float, bool, List, dict]],
     ) -> None:
         """
         Initializes the Model with an associated Artifact.
@@ -37,7 +37,8 @@ class Model(BaseModel, ABC):
             name (str): Name of the model artifact.
             asset_path (str): Path for storing the artifact.
             version (str): Version of the model.
-            **data (Any): Additional data passed to the BaseModel initializer.
+            **data (Dict[str, Union[str, int, float, bool, List, dict]]):
+                Additional data passed to the BaseModel initializer.
         """
         super().__init__(**data)
         self._artifact = Artifact(
@@ -110,13 +111,15 @@ class Model(BaseModel, ABC):
         model_data = eval(loaded_data.decode())
         self._parameters = model_data.get("parameters", {})
 
-    def set_params(self, **params: Any) -> None:
+    def set_params(
+        self, **params: Dict[str, Union[str, int, float, bool, List, dict]]
+    ) -> None:
         """
         Set the model parameters.
 
         Args:
-            **params (Any): Arbitrary keyword arguments representing model
-                parameters.
+            **params (Dict[str, Union[str, int, float, bool, List, dict]]):
+                Arbitrary keyword arguments representing model parameters.
         """
         for key, value in params.items():
             self._parameters[key] = value

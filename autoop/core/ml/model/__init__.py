@@ -1,4 +1,30 @@
 from autoop.core.ml.model.model import Model
+"""
+This module provides a factory function to retrieve machine learning models by name.
+
+Classes:
+    Model: Base class for all models.
+    MultipleLinearRegression: Implements multiple linear regression.
+    DecisionTreeRegressionModel: Implements decision tree regression.
+    LassoRegressionModel: Implements lasso regression.
+    KNearestNeighbors: Implements k-nearest neighbors classification.
+    DecisionTreeClassificationModel: Implements decision tree classification.
+    RandomForestClassifierModel: Implements random forest classification.
+
+Constants:
+    REGRESSION_MODELS (list): List of available regression model names.
+    CLASSIFICATION_MODELS (list): List of available classification model names.
+
+Functions:
+    get_model(model_name: str) -> Model:
+        Factory function to get a model by name.
+        Args:
+            model_name (str): The name of the model to retrieve.
+        Returns:
+            Model: An instance of the requested model.
+        Raises:
+            ValueError: If the model name is not recognized.
+"""
 from autoop.core.ml.model.regression.mulitple_linear_regression import (
     MultipleLinearRegression,
 )

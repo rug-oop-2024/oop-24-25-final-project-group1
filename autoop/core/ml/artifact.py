@@ -149,12 +149,12 @@ class Artifact(ABC):
         """
         return self._metadata
 
-    def update_metadata(self, key: str, value) -> None:
+    def update_metadata(self, key: str, value: any) -> None:
         """
         Updates the metadata of the artifact with a new key-value pair.
 
         Args:
             key (str): The key to update or add.
-            value: The value associated with the key.
+            value (any): The value associated with the key.
         """
         self._metadata[key] = value

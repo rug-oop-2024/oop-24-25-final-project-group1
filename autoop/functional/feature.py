@@ -25,7 +25,7 @@ def detect_feature_types(dataset: Dataset) -> List[Feature]:
     if not isinstance(dataset.data, (str, bytes)):
         raise TypeError("The Dataset object's data should be "
                         "of type str or bytes.")
- 
+
     csv_data = dataset.data.decode("utf-8")
     data = pd.read_csv(io.StringIO(csv_data))
     features = []

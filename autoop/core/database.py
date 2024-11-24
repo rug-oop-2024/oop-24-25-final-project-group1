@@ -5,8 +5,12 @@ from autoop.core.storage import Storage
 
 
 class Database():
-
-    def __init__(self, storage: Storage):
+    """
+    A simple database abstraction layer that uses a `Storage` object
+    for persistence.
+    """
+    
+    def __init__(self, storage: Storage) -> None:
         self._storage = storage
         self._data = {}
         self._load()
@@ -42,7 +46,7 @@ class Database():
             return None
         return self._data[collection].get(id, None)
 
-    def delete(self, collection: str, id: str):
+    def delete(self, collection: str, id: str) -> None:
         """Delete a key from the database
         Args:
             collection (str): The collection to delete the data from
@@ -68,11 +72,11 @@ class Database():
             return []
         return [(id, data) for id, data in self._data[collection].items()]
 
-    def refresh(self):
+    def refresh(self) -> None:
         """Refresh the database by loading the data from storage"""
         self._load()
 
-    def _persist(self):
+    def _persist(self) -> None:
         """Persist the data to storage"""
         for collection, data in self._data.items():
             if not data:
@@ -89,7 +93,7 @@ class Database():
             if not self._data.get(collection, id):
                 self._storage.delete(f"{collection}/{id}")
 
-    def _load(self):
+    def _load(self) -> None:
         """Load the data from storage"""
         self._data = {}
         for key in self._storage.list(""):

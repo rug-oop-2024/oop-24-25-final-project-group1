@@ -1,5 +1,4 @@
 from abc import ABC, abstractmethod
-from typing import Any
 import numpy as np
 
 
@@ -40,13 +39,13 @@ class Metric(ABC):
     """
 
     @abstractmethod
-    def __call__(self, ground_truth: Any, prediction: Any) -> float:
+    def __call__(self, ground_truth: np.ndarray, prediction: np.ndarray) -> float:
         """
         Calculate the metric value given the ground truth and predictions.
 
         Args:
-            ground_truth (Any): The true values.
-            prediction (Any): The predicted values.
+            ground_truth (np.ndarray): The true values.
+            prediction (np.ndarray): The predicted values.
 
         Returns:
             float: The computed metric value.
@@ -63,13 +62,13 @@ class Metric(ABC):
         """
         pass
 
-    def evaluate(self, ground_truth: Any, prediction: Any) -> float:
+    def evaluate(self, ground_truth: np.ndarray, prediction: np.ndarray) -> float:
         """
         Evaluate the metric by calculating the value and printing a summary.
 
         Args:
-            ground_truth (Any): The true values.
-            prediction (Any): The predicted values.
+            ground_truth (np.ndarray): The true values.
+            prediction (np.ndarray): The predicted values.
 
         Returns:
             float: The computed metric value.
@@ -101,6 +100,12 @@ class MeanSquaredError(Metric):
         return error
 
     def __str__(self) -> str:
+        """
+        Returns a string representation of the metric.
+
+        Returns:
+            str: The name of the metric, "Mean Squared Error".
+        """
         return "Mean Squared Error"
 
 
@@ -127,6 +132,12 @@ class Accuracy(Metric):
         return accuracy
 
     def __str__(self) -> str:
+        """
+        Returns a string representation of the metric.
+
+        Returns:
+            str: The name of the metric, "Accuracy".
+        """
         return "Accuracy"
 
 
@@ -169,6 +180,12 @@ class BalancedAccuracy(Metric):
         return balanced_accuracy
 
     def __str__(self) -> str:
+        """
+        Returns a string representation of the metric.
+
+        Returns:
+            str: The name of the metric, "Balanced Accuracy".
+        """
         return "Balanced Accuracy"
 
 
@@ -200,7 +217,7 @@ class MacroPrecision(Metric):
         return np.mean(precision_values)
 
     def _calculate_precision_for_class(
-        self, ground_truth: np.ndarray, prediction: np.ndarray, label: Any
+        self, ground_truth: np.ndarray, prediction: np.ndarray, label: str
     ) -> float:
         """
         Helper function to calculate precision for a specific class.
@@ -208,7 +225,7 @@ class MacroPrecision(Metric):
         Args:
             ground_truth (np.ndarray): The true values.
             prediction (np.ndarray): The predicted values.
-            label (Any): The class label to calculate precision for.
+            label (str): The class label to calculate precision for.
 
         Returns:
             float: Precision value for the specified class.
@@ -223,6 +240,12 @@ class MacroPrecision(Metric):
             return 0.0
 
     def __str__(self) -> str:
+        """
+        Returns a string representation of the metric.
+
+        Returns:
+            str: The name of the metric, "Macro Precision".
+        """
         return "Macro Precision"
 
 
@@ -251,6 +274,12 @@ class R2Score(Metric):
         return r2_score
 
     def __str__(self) -> str:
+        """
+        Returns a string representation of the metric.
+
+        Returns:
+            str: The string "R² Score".
+        """
         return "R² Score"
 
 
@@ -277,6 +306,12 @@ class MeanAbsoluteError(Metric):
         return error
 
     def __str__(self) -> str:
+        """
+        Returns a string representation of the metric.
+
+        Returns:
+            str: The name of the metric, "Mean Absolute Error".
+        """
         return "Mean Absolute Error"
 
 
