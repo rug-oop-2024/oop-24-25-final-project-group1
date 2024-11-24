@@ -103,8 +103,8 @@ class KNearestNeighbors(Model):
         self.k = self._parameters.get("k", 3)
         self._model = KNeighborsClassifier(n_neighbors=self.k)
         if (
-            "observations" in self._parameters
-            and "ground_truth" in self._parameters
+            "observations" in self._parameters and 
+            "ground_truth" in self._parameters
         ):
             self._model.fit(
                 self._parameters["observations"],

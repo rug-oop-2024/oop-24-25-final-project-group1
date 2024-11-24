@@ -39,7 +39,9 @@ class Metric(ABC):
     """
 
     @abstractmethod
-    def __call__(self, ground_truth: np.ndarray, prediction: np.ndarray) -> float:
+    def __call__(
+        self, ground_truth: np.ndarray, prediction: np.ndarray
+    ) -> float:
         """
         Calculate the metric value given the ground truth and predictions.
 
@@ -62,7 +64,9 @@ class Metric(ABC):
         """
         pass
 
-    def evaluate(self, ground_truth: np.ndarray, prediction: np.ndarray) -> float:
+    def evaluate(
+        self, ground_truth: np.ndarray, prediction: np.ndarray
+    ) -> float:
         """
         Evaluate the metric by calculating the value and printing a summary.
 

@@ -1,6 +1,6 @@
-from autoop.core.ml.model.model import Model
 """
-This module provides a factory function to retrieve machine learning models by name.
+This module provides a factory function to
+    retrieve machine learning models by name.
 
 Classes:
     Model: Base class for all models.
@@ -25,6 +25,8 @@ Functions:
         Raises:
             ValueError: If the model name is not recognized.
 """
+
+from autoop.core.ml.model.model import Model
 from autoop.core.ml.model.regression.mulitple_linear_regression import (
     MultipleLinearRegression,
 )

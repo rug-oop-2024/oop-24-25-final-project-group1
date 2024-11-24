@@ -9,8 +9,18 @@ class Database():
     A simple database abstraction layer that uses a `Storage` object
     for persistence.
     """
-    
+
     def __init__(self, storage: Storage) -> None:
+        """
+        Initializes the Database instance.
+
+        Args:
+            storage (Storage): The storage backend to be used for the database.
+
+        Attributes:
+            _storage (Storage): The storage backend instance.
+            _data (dict): A dictionary to hold the data loaded from storage.
+        """
         self._storage = storage
         self._data = {}
         self._load()

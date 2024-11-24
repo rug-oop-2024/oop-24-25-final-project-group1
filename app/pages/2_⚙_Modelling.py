@@ -61,12 +61,13 @@ def select_dataset(datasets: list[Dataset]) -> Dataset:
     selected_dataset_name = st.selectbox("Select a dataset", dataset_names)
     if selected_dataset_name:
         selected_dataset = next(
-            dataset for dataset in datasets if dataset._name
-            == selected_dataset_name
+            dataset for dataset in datasets 
+            if dataset._name == selected_dataset_name
         )
         st.write(f"Selected dataset: {selected_dataset_name}")
         return selected_dataset
     return None
+
 
 
 def select_features(features: list[Feature]) -> tuple[list[Feature], Feature]:
@@ -103,10 +104,10 @@ def select_features(features: list[Feature]) -> tuple[list[Feature], Feature]:
         key="target_feature",
     )
     target_feature = next(
-        feature for feature in available_target_features if feature.name
-        == target_feature_name
+        feature for feature in available_target_features 
+        if feature.name == target_feature_name
     )
-
+    
     return input_features, target_feature
 
 
