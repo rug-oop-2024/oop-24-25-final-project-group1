@@ -7,11 +7,20 @@ from autoop.core.ml.feature import Feature
 from autoop.functional.feature import detect_feature_types
 
 class TestFeatures(unittest.TestCase):
-
+    """
+    Unit tests for feature detection functionalities.
+    """
+    
     def setUp(self) -> None:
+        """
+        Placeholder for setup logic. Currently, no initialization is required.
+        """
         pass
 
-    def test_detect_features_continuous(self):
+    def test_detect_features_continuous(self) -> None:
+        """
+        Test detection of continuous numerical features in the Iris dataset.
+        """
         iris = load_iris()
         df = pd.DataFrame(
             iris.data,
@@ -32,7 +41,11 @@ class TestFeatures(unittest.TestCase):
             self.assertEqual(feature.name in iris.feature_names, True)
             self.assertEqual(feature.type, "numerical")
         
-    def test_detect_features_with_categories(self):
+    def test_detect_features_with_categories(self) -> None:
+        """
+        Test detection of features with a mix of numerical and categorical types
+        in the Adult dataset.
+        """
         data = fetch_openml(name="adult", version=1, parser="auto")
         df = pd.DataFrame(
             data.data,

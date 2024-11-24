@@ -153,30 +153,30 @@ If you did not implement the feature
 
 | Requirement                           | Type (FN/NF) | Implemented by       | Implementation Completed (add X if done) | Comment |
 |-------------------------------------- |--------------|----------------------|--------------------------|---------|         
-| Up-to-date requirements.txt           | NF           |                      |         | |
-| `ML/detect-features`                  | FN           |                      |         | |
-| `ML/artifact`                         | NF           |                      |         | |
-| `ML/feature`                          | NF           |                      |         | |
-| `ML/metric`                           | NF           |                      |         | |
-| `ML/metric/extensions`                | FN           |                      |         | |
-| `ML/model`                            | NF           |                      |         | |
-| `ML/model/extensions`                 | FN           |                      |         | |
-| `ML/pipeline/evaluation`              | FN           |                      |         | | 
-| `ST/page/datasets`                    | NF           |                      |         | |
-| `ST/datasets/management/create`       | FN           |                      |         | |
-| `ST/datasets/management/save`         | FN           |                      |         | |
-| `ST/page/modelling`                   | NF           |                      |         | |
-| `ST/modelling/datasets/list`          | FN           |                      |         | |
-| `ST/modelling/datasets/features`      | FN           |                      |         | |
-| `ST/modelling/models`                 | FN           |                      |         | |
-| `ST/modelling/pipeline/split`         | FN           |                      |         | |
-| `ST/modelling/pipeline/metrics`       | FN           |                      |         | |
-| `ST/modelling/pipeline/summary`       | FN           |                      |         | |
-| `ST/modelling/pipeline/train`         | FN           |                      |         | |
-| `ST/modelling/pipeline/save`          | FN           |                      |         | |
-| `ST/page/deployment`                  | FN           |                      |         | |
-| `ST/deployment/load`                  | FN           |                      |         | |
-| `ST/deployment/predict`               | FN           |                      |         | |
+| Up-to-date requirements.txt           | NF           |    Ana               |    X    | |
+| `ML/detect-features`                  | FN           |    Ana               |    X    | |
+| `ML/artifact`                         | NF           |    Catarina          |    X    | |
+| `ML/feature`                          | NF           |    Catarina          |    X    | |
+| `ML/metric`                           | NF           |    Catarina          |    X    | |
+| `ML/metric/extensions`                | FN           |     both             |    X    | |
+| `ML/model`                            | NF           |    Catarina          |    X    | |
+| `ML/model/extensions`                 | FN           |     both             |    X    | |
+| `ML/pipeline/evaluation`              | FN           |    Catarina          |    X    | | 
+| `ST/page/datasets`                    | NF           |     both             |    X    | |
+| `ST/datasets/management/create`       | FN           |    Catarina          |    X    | |
+| `ST/datasets/management/save`         | FN           |    Catarina          |    X    | |
+| `ST/page/modelling`                   | NF           |    Ana               |    X    | |
+| `ST/modelling/datasets/list`          | FN           |    Ana               |    X    | |
+| `ST/modelling/datasets/features`      | FN           |    Catarina          |    X    | |
+| `ST/modelling/models`                 | FN           |    Catarina          |    X    | |
+| `ST/modelling/pipeline/split`         | FN           |    Catarina          |    X    | |
+| `ST/modelling/pipeline/metrics`       | FN           |    both              |    X    | |
+| `ST/modelling/pipeline/summary`       | FN           |    Ana               |    X    | |
+| `ST/modelling/pipeline/train`         | FN           |    Catarina          |    X    | |
+| `ST/modelling/pipeline/save`          | FN           |    Catarina          |    X    | |
+| `ST/page/deployment`                  | FN           |    Ana               |    X    | |
+| `ST/deployment/load`                  | FN           |    Catarina          |    X    | |
+| `ST/deployment/predict`               | FN           |    Catarina          |    X    | |
 
 If you add extra features, please indicate them below:
 | Requirement                           | Type (FN/NF) | Implemented by       | Implementation Completed (add X if done) | Comment |

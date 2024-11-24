@@ -1,2 +1,6 @@
+"""
+This is the initialization file for the regression module.
 
-from autoop.core.ml.model.regression.multiple_linear_regression import MultipleLinearRegression
+It is used to initialize the regression submodule of
+the autoop.core.ml.model package.
+"""
