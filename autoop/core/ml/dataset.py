@@ -22,9 +22,9 @@ class Dataset(Artifact):
 
     @staticmethod
     def from_dataframe(
-        data: pd.DataFrame, 
-        name: str, 
-        asset_path: str, 
+        data: pd.DataFrame,
+        name: str,
+        asset_path: str,
         version: str = "1.0.0"
     ) -> 'Dataset':
         """

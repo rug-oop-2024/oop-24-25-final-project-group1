@@ -18,6 +18,10 @@ def handle_file_upload() -> None:
         try:
             data = pd.read_csv(uploaded_file, on_bad_lines='skip')
             st.write(data)
+            
+            if data.isnull().any().any():
+                st.error("The dataset contains columns with null values and is not appropriate for reading.")
+                return
 
             dataset_name = st.text_input(
                 "Enter dataset name:", value="MyDataset"

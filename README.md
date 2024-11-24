@@ -169,7 +169,7 @@ If you did not implement the feature
 | `ST/modelling/datasets/list`          | FN           |    Ana               |    X    | |
 | `ST/modelling/datasets/features`      | FN           |    Catarina          |    X    | |
 | `ST/modelling/models`                 | FN           |    Catarina          |    X    | |
-| `ST/modelling/pipeline/split`         | FN           |    Ana               |    X    | |
+| `ST/modelling/pipeline/split`         | FN           |    Catarina          |    X    | |
 | `ST/modelling/pipeline/metrics`       | FN           |    Ana               |    X    | |
 | `ST/modelling/pipeline/summary`       | FN           |    Ana               |    X    | |
 | `ST/modelling/pipeline/train`         | FN           |    Catarina          |    X    | |

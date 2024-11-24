@@ -132,7 +132,7 @@ def determine_task_type(
         raise ValueError(
             f"Unsupported target feature type: {target_feature.type}"
         )
-
+  
 
 def select_model(task_type: str) -> type:
     """
@@ -337,7 +337,9 @@ if selected_dataset:
         model_class = select_model(task_type)
         model = model_class()
 
-        selected_metrics, selected_metrics_names = select_metrics(task_type)
+        selected_metrics, selected_metrics_names = (
+            select_metrics(task_type)
+        )
         split_ratio = select_split_ratio()
 
         pipeline = create_pipeline(
@@ -348,8 +350,7 @@ if selected_dataset:
             selected_metrics,
             split_ratio,
         )
-
-        # Display a summary of the pipeline
+        # display a summary of the pipeline
         st.subheader("Pipeline Summary")
         st.markdown("### Dataset")
         st.write(f"**Name:** {selected_dataset._name}")

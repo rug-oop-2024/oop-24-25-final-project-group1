@@ -116,10 +116,6 @@ class Artifact(ABC):
                 after attempting to read it.
         """
         if not os.path.exists(self._base_path + self._asset_path):
-            print(f"The path is {self._base_path + self._asset_path}")
-            # Providing a warning instead of raising an error for testing purposes
-            print("Warning: Creating the data because it does not exist.")
-            print(f"The path is {self._asset_path}")
             self.save1(self._base_path)
         try:
             with open(self._base_path + self._asset_path, 'rb') as file:
@@ -139,7 +135,9 @@ class Artifact(ABC):
             str: A unique ID string derived from base64 encoding of the asset
                 path and version.
         """
-        encoded_path = base64.urlsafe_b64encode(self._asset_path.encode()).decode()
+        encoded_path = (
+            base64.urlsafe_b64encode(self._asset_path.encode()).decode()
+        )
         return f"{encoded_path}:{self._version}"
 
     def get_metadata(self) -> dict:

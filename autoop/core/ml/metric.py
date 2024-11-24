@@ -35,7 +35,8 @@ def get_metric(name: str) -> 'Metric':
 class Metric(ABC):
     """
     Base class for all metrics.
-    Metrics take ground truth and predictions as input and return a real number.
+    Metrics take ground truth and predictions
+        as input and return a real number.
     """
 
     @abstractmethod
@@ -83,7 +84,9 @@ class MeanSquaredError(Metric):
     Implementation of Mean Squared Error (MSE) metric.
     """
 
-    def __call__(self, ground_truth: np.ndarray, prediction: np.ndarray) -> float:
+    def __call__(
+        self, ground_truth: np.ndarray, prediction: np.ndarray
+    ) -> float:
         """
         Calculate the Mean Squared Error between ground truth and predictions.
 
@@ -106,7 +109,9 @@ class Accuracy(Metric):
     Implementation of Accuracy metric for multi-class classification tasks.
     """
 
-    def __call__(self, ground_truth: np.ndarray, prediction: np.ndarray) -> float:
+    def __call__(
+        self, ground_truth: np.ndarray, prediction: np.ndarray
+    ) -> float:
         """
         Calculate the accuracy by comparing ground truth and predictions.
 
@@ -130,7 +135,9 @@ class BalancedAccuracy(Metric):
     Implementation of Balanced Accuracy metric for classification tasks.
     """
 
-    def __call__(self, ground_truth: np.ndarray, prediction: np.ndarray) -> float:
+    def __call__(
+        self, ground_truth: np.ndarray, prediction: np.ndarray
+    ) -> float:
         """
         Calculate the Balanced Accuracy by averaging the recall for each class.
 
@@ -162,40 +169,40 @@ class MacroPrecision(Metric):
     Implementation of Macro Precision metric for classification tasks.
     """
 
-    def __call__(self, true_labels: np.ndarray, predicted_labels: np.ndarray) -> float:
+    def __call__(self, ground_truth: np.ndarray, prediction: np.ndarray) -> float:
         """
         Calculate the Macro Precision.
 
         Args:
-            true_labels (np.ndarray): The true values.
-            predicted_labels (np.ndarray): The predicted values.
+            ground_truth (np.ndarray): The true values.
+            prediction (np.ndarray): The predicted values.
 
         Returns:
             float: The computed Macro Precision.
         """
-        classes = np.unique(true_labels)
+        classes = np.unique(ground_truth)
         precision_values = [
-            self._calculate_precision_for_class(true_labels, predicted_labels, label)
+            self._calculate_precision_for_class(ground_truth, prediction, label)
             for label in classes
         ]
         return np.mean(precision_values)
 
     def _calculate_precision_for_class(
-        self, true_labels: np.ndarray, predicted_labels: np.ndarray, label: Any
+        self, ground_truth: np.ndarray, prediction: np.ndarray, label: Any
     ) -> float:
         """
         Helper function to calculate precision for a specific class.
 
         Args:
-            true_labels (np.ndarray): The true values.
-            predicted_labels (np.ndarray): The predicted values.
+            ground_truth (np.ndarray): The true values.
+            prediction (np.ndarray): The predicted values.
             label (Any): The class label to calculate precision for.
 
         Returns:
             float: Precision value for the specified class.
         """
-        true_positives = np.sum((predicted_labels == label) & (true_labels == label))
-        total_predicted = np.sum(predicted_labels == label)
+        true_positives = np.sum((prediction == label) & (ground_truth == label))
+        total_predicted = np.sum(prediction == label)
         return true_positives / total_predicted if total_predicted > 0 else 0.0
 
     def __str__(self) -> str:
