@@ -10,7 +10,7 @@ class Model(BaseModel, ABC):
     """
     Abstract base class for all learning models.
 
-    This class defines the standard structure for machine learning models, 
+    This class defines the standard structure for machine learning models,
     including methods for fitting, predicting, saving, and loading models.
 
     Attributes:
@@ -66,7 +66,8 @@ class Model(BaseModel, ABC):
         Fits the model to the provided training data.
 
         Args:
-            observations (np.ndarray): Feature matrix of shape (n_samples, n_features).
+            observations (np.ndarray): Feature matrix of
+                shape (n_samples, n_features).
             ground_truth (np.ndarray): Target vector of shape (n_samples,).
         """
         pass
@@ -77,7 +78,8 @@ class Model(BaseModel, ABC):
         Predicts the values for the provided observations.
 
         Args:
-            observations (np.ndarray): Feature matrix of shape (n_samples, n_features).
+            observations (np.ndarray): Feature matrix of
+                shape (n_samples, n_features).
 
         Returns:
             np.ndarray: Predicted values of shape (n_samples,).

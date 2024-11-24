@@ -1,10 +1,6 @@
 class Feature:
     """
     Represents a feature in a dataset.
-
-    Attributes:
-        name (str): The name of the feature
-        type (str): The type of the feature
     """
 
     def __init__(self, name: str, type: str) -> None:

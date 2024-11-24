@@ -47,7 +47,9 @@ class DecisionTreeRegressionModel(Model):
             version (str): Version of the model. Defaults to "0.1".
             **data: Additional parameters passed to the model.
         """
-        super().__init__(name=name, asset_path=asset_path, version=version, **data)
+        super().__init__(
+            name=name, asset_path=asset_path, version=version, **data
+        )
         self._model = DecisionTreeRegressor(
             max_depth=self.max_depth,
             min_samples_split=self.min_samples_split,

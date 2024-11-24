@@ -122,7 +122,7 @@ def determine_task_type(
         target_feature (Feature): The target feature.
 
     Returns:
-        str: The task type ('classification' or 'regression').
+        str: The task type ("classification" or "regression").
     """
     if target_feature.type == "categorical":
         return "classification"
@@ -132,14 +132,14 @@ def determine_task_type(
         raise ValueError(
             f"Unsupported target feature type: {target_feature.type}"
         )
-  
+
 
 def select_model(task_type: str) -> type:
     """
     Allows the user to select a model based on the task type.
 
     Args:
-        task_type (str): The task type ('classification' or 'regression').
+        task_type (str): The task type ("classification" or "regression").
 
     Returns:
         type: The selected model class.
@@ -161,7 +161,7 @@ def select_metrics(task_type: str):
     Allows the user to select metrics based on the task type.
 
     Args:
-        task_type (str): The task type ('classification' or 'regression').
+        task_type (str): The task type ("classification" or "regression").
 
     Returns:
         tuple[list[Metric], list[str]]: The selected metrics and their names.
@@ -254,14 +254,14 @@ def to_artifact(pipeline: Pipeline, name: str, version: str) -> Artifact:
         Artifact: The created artifact from the pipeline.
     """
     pipeline_data = pickle.dumps({
-        'name': name,
-        'version': version,
-        'input_features': pipeline._input_features,
-        'target_feature': pipeline._target_feature,
-        'split': pipeline._split,
-        'model': pipeline._model,
-        'metrics': pipeline._metrics,
-        'dataset': pipeline._dataset
+        "name": name,
+        "version": version,
+        "input_features": pipeline._input_features,
+        "target_feature": pipeline._target_feature,
+        "split": pipeline._split,
+        "model": pipeline._model,
+        "metrics": pipeline._metrics,
+        "dataset": pipeline._dataset,
     })
 
     artifact = Artifact(

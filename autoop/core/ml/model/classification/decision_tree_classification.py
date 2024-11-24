@@ -50,14 +50,16 @@ class DecisionTreeClassificationModel(Model):
             version (str): Version of the model. Defaults to "0.1".
             **data: Additional hyperparameters for the model.
         """
-        super().__init__(name=name, asset_path=asset_path, version=version, **data)
+        super().__init__(
+            name=name, asset_path=asset_path, version=version, **data
+        )
         self._model = DecisionTreeClassifier(
             max_depth=self.max_depth,
             min_samples_split=self.min_samples_split
         )
         self._parameters = {
-            'max_depth': self.max_depth,
-            'min_samples_split': self.min_samples_split
+            "max_depth": self.max_depth,
+            "min_samples_split": self.min_samples_split
         }
         self._type = "classification"
 
@@ -73,8 +75,8 @@ class DecisionTreeClassificationModel(Model):
                 shape (n_samples,).
         """
         self._model.fit(observations, ground_truth)
-        self._parameters['tree_structure'] = self._model.tree_
-        self._parameters['trained'] = True
+        self._parameters["tree_structure"] = self._model.tree_
+        self._parameters["trained"] = True
 
     def predict(self, observations: np.ndarray) -> np.ndarray:
         """
@@ -97,8 +99,8 @@ class DecisionTreeClassificationModel(Model):
             directory (str): The directory where the model should be saved.
         """
         model_data = {
-            'model': self._model,
-            'parameters': self._parameters
+            "model": self._model,
+            "parameters": self._parameters
         }
         self._artifact.data = str(model_data).encode()
         self._artifact.save(directory)
@@ -114,6 +116,6 @@ class DecisionTreeClassificationModel(Model):
         """
         loaded_artifact = Artifact.load(directory, artifact_id)
         model_data = eval(loaded_artifact.data.decode())
-        self._model = model_data['model']
-        self._parameters = model_data['parameters']
+        self._model = model_data["model"]
+        self._parameters = model_data["parameters"]
         self._type = "classification"

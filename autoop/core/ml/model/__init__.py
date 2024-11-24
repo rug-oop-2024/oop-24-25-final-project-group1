@@ -47,4 +47,4 @@ def get_model(model_name: str) -> Model:
         return RandomForestClassifierModel()
     else:
         raise ValueError(f"'{model_name}' is not recognized. "
-                          "Please use a valid model name.")
+                         f"Please use a valid model name.")

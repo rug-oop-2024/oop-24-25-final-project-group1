@@ -8,10 +8,10 @@ from pydantic import PrivateAttr, Field
 
 class RandomForestClassifierModel(Model):
     """
-    Random Forest Classifier model implementation.
+    Random Forest Classifier model implementation
 
     Uses a RandomForestClassifier from scikit-learn to perform classification
-    tasks.
+    tasks
     """
 
     n_estimators: int = Field(
@@ -30,18 +30,21 @@ class RandomForestClassifierModel(Model):
         **data
     ) -> None:
         """
-        Initializes the Random Forest Classifier model with specified
-        hyperparameters.
+        Initializes the Random Forest Classifier model
+        with specified hyperparameters
 
         Args:
             name (str): Name of the model. Defaults to "test_model".
-            asset_path (str): Path to store model artifacts. Defaults to "./tmp".
+            asset_path (str): Path to store model artifacts.
+                Defaults to "./tmp".
             version (str): Version of the model. Defaults to "0.1".
             n_estimators (int): Number of trees in the forest. Defaults to 100.
             max_depth (int): Maximum depth of the trees. Defaults to None.
             **data: Additional hyperparameters for the model.
         """
-        super().__init__(name=name, asset_path=asset_path, version=version, **data)
+        super().__init__(
+            name=name, asset_path=asset_path, version=version, **data
+        )
         self._hyperparameters["n_estimators"] = n_estimators
         self._hyperparameters["max_depth"] = max_depth
 

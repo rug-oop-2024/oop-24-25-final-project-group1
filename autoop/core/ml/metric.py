@@ -3,7 +3,7 @@ from typing import Any
 import numpy as np
 
 
-def get_metric(name: str) -> 'Metric':
+def get_metric(name: str) -> "Metric":
     """
     Factory function to get a metric by name.
 
@@ -150,13 +150,21 @@ class BalancedAccuracy(Metric):
         """
         unique_classes = np.unique(ground_truth)
         recalls = []
+
         for cls in unique_classes:
-            true_positive = np.sum((prediction == cls) & (ground_truth == cls))
-            false_negative = np.sum((prediction != cls) & (ground_truth == cls))
+            true_positive = np.sum(
+                (prediction == cls) & (ground_truth == cls)
+            )
+            false_negative = np.sum(
+                (prediction != cls) & (ground_truth == cls)
+            )
             if true_positive + false_negative == 0:
                 recalls.append(0.0)
             else:
-                recalls.append(true_positive / (true_positive + false_negative))
+                recalls.append(
+                    true_positive / (true_positive + false_negative)
+                )
+
         balanced_accuracy = np.mean(recalls)
         return balanced_accuracy
 
@@ -169,7 +177,9 @@ class MacroPrecision(Metric):
     Implementation of Macro Precision metric for classification tasks.
     """
 
-    def __call__(self, ground_truth: np.ndarray, prediction: np.ndarray) -> float:
+    def __call__(
+        self, ground_truth: np.ndarray, prediction: np.ndarray
+    ) -> float:
         """
         Calculate the Macro Precision.
 
@@ -182,7 +192,9 @@ class MacroPrecision(Metric):
         """
         classes = np.unique(ground_truth)
         precision_values = [
-            self._calculate_precision_for_class(ground_truth, prediction, label)
+            self._calculate_precision_for_class(
+                ground_truth, prediction, label
+            )
             for label in classes
         ]
         return np.mean(precision_values)
@@ -201,9 +213,14 @@ class MacroPrecision(Metric):
         Returns:
             float: Precision value for the specified class.
         """
-        true_positives = np.sum((prediction == label) & (ground_truth == label))
+        true_positives = np.sum(
+            (prediction == label) & (ground_truth == label)
+        )
         total_predicted = np.sum(prediction == label)
-        return true_positives / total_predicted if total_predicted > 0 else 0.0
+        if total_predicted > 0:
+            return true_positives / total_predicted
+        else:
+            return 0.0
 
     def __str__(self) -> str:
         return "Macro Precision"
@@ -214,9 +231,12 @@ class R2Score(Metric):
     Implementation of R-squared (R²) metric for regression tasks.
     """
 
-    def __call__(self, ground_truth: np.ndarray, prediction: np.ndarray) -> float:
+    def __call__(
+        self, ground_truth: np.ndarray, prediction: np.ndarray
+    ) -> float:
         """
-        Calculate the R-squared (R²) value between ground truth and predictions.
+        Calculate the R-squared (R²) value between
+        ground truth and predictions.
 
         Args:
             ground_truth (np.ndarray): The true values.
@@ -239,9 +259,12 @@ class MeanAbsoluteError(Metric):
     Implementation of Mean Absolute Error (MAE) metric for regression tasks.
     """
 
-    def __call__(self, ground_truth: np.ndarray, prediction: np.ndarray) -> float:
+    def __call__(
+        self, ground_truth: np.ndarray, prediction: np.ndarray
+    ) -> float:
         """
-        Calculate the Mean Absolute Error between ground truth and predictions.
+        Calculate the Mean Absolute Error between
+        ground truth and predictions.
 
         Args:
             ground_truth (np.ndarray): The true values.

@@ -118,7 +118,7 @@ class Artifact(ABC):
         if not os.path.exists(self._base_path + self._asset_path):
             self.save1(self._base_path)
         try:
-            with open(self._base_path + self._asset_path, 'rb') as file:
+            with open(self._base_path + self._asset_path, "rb") as file:
                 return file.read()
         except FileNotFoundError:
             raise FileNotFoundError(

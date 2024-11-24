@@ -16,11 +16,12 @@ def handle_file_upload() -> None:
     uploaded_file = st.file_uploader("Choose a CSV file", type="csv")
     if uploaded_file is not None:
         try:
-            data = pd.read_csv(uploaded_file, on_bad_lines='skip')
+            data = pd.read_csv(uploaded_file, on_bad_lines="skip")
             st.write(data)
-            
+
             if data.isnull().any().any():
-                st.error("The dataset contains columns with null values and is not appropriate for reading.")
+                st.error("The dataset contains columns with null values "
+                         "and is not appropriate for reading.")
                 return
 
             dataset_name = st.text_input(

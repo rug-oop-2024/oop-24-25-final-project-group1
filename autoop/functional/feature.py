@@ -4,6 +4,7 @@ from autoop.core.ml.feature import Feature
 import pandas as pd
 import io
 
+
 def detect_feature_types(dataset: Dataset) -> List[Feature]:
     """
     Detects the feature types (categorical or numerical) from a dataset.
@@ -15,7 +16,7 @@ def detect_feature_types(dataset: Dataset) -> List[Feature]:
         List[Feature]: A list of Feature objects with their detected
             types (categorical or numerical).
     """
-    
+
     if dataset.data is None:
         raise ValueError("The Dataset object does not contain any valid data. "
                          "Please ensure that the dataset is properly "
@@ -24,7 +25,7 @@ def detect_feature_types(dataset: Dataset) -> List[Feature]:
     if not isinstance(dataset.data, (str, bytes)):
         raise TypeError("The Dataset object's data should be "
                         "of type str or bytes.")
-    
+ 
     csv_data = dataset.data.decode("utf-8")
     data = pd.read_csv(io.StringIO(csv_data))
     features = []

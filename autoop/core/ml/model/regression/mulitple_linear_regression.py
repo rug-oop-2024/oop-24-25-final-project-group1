@@ -41,7 +41,9 @@ class MultipleLinearRegression(Model):
             regularization (float): Regularization strength (default: 0.0).
             **data: Additional parameters for the model.
         """
-        super().__init__(name=name, asset_path=asset_path, version=version, **data)
+        super().__init__(
+            name=name, asset_path=asset_path, version=version, **data
+        )
         self._parameters = {
             "regularization": regularization,
         }
@@ -59,12 +61,14 @@ class MultipleLinearRegression(Model):
 
     def fit(self, observations: np.ndarray, ground_truth: np.ndarray) -> None:
         """
-        Fits the multiple linear regression model to the provided training data.
+        Fits the multiple linear regression model to the provided
+            training data.
         Applies L2 regularization if the regularization parameter is greater
         than 0.
 
         Args:
-            observations (np.ndarray): Feature matrix of shape (n_samples, p_features).
+            observations (np.ndarray): Feature matrix of
+                shape (n_samples, p_features).
             ground_truth (np.ndarray): Target vector of shape (n_samples,).
         """
         regularization = self._parameters.get("regularization", 0.0)
@@ -92,7 +96,8 @@ class MultipleLinearRegression(Model):
         Predicts the values for the provided observations.
 
         Args:
-            observations (np.ndarray): Feature matrix of shape (n_samples, p_features).
+            observations (np.ndarray): Feature matrix of
+                shape (n_samples, p_features).
 
         Returns:
             np.ndarray: Predicted values of shape (n_samples,).
@@ -102,7 +107,8 @@ class MultipleLinearRegression(Model):
         """
         if self._weights is None:
             raise ValueError(
-                "Model has not been trained yet. Please fit the model before predicting."
+                "Model has not been trained yet. "
+                "Please fit the model before predicting."
             )
 
         observations_b = np.c_[
@@ -139,7 +145,8 @@ class MultipleLinearRegression(Model):
 
         Args:
             directory (str): The directory where the model is stored.
-            artifact_id (str): The unique ID of the model artifact to be loaded.
+            artifact_id (str): The unique ID of the model
+                artifact to be loaded.
         """
         self._artifact = Artifact(
             asset_path=f"{directory}/{artifact_id}.bin",

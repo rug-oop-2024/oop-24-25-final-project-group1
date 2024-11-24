@@ -83,7 +83,8 @@ class LocalStorage(Storage):
         directory if it does not exist.
 
         Args:
-            base_path (str): The base path for local storage. Defaults to "./assets".
+            base_path (str): The base path for local storage.
+                Defaults to "./assets".
         """
         self._base_path = base_path
         if not os.path.exists(self._base_path):

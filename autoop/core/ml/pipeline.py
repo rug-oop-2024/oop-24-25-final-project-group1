@@ -56,9 +56,13 @@ class Pipeline:
         self._metrics = metrics
         self._artifacts = {}
         self._split = split
-        if target_feature.type == "categorical" and model.type != "classification":
+        if (
+            target_feature.type == "categorical" 
+            and model.type != "classification"
+        ):
             raise ValueError(
-                "Model type must be classification for categorical target feature"
+                "Model type must be classification for "
+                "categorical target feature"
             )
         if target_feature.type == "continuous" and model.type != "regression":
             raise ValueError(
@@ -143,7 +147,9 @@ Pipeline(
             [self._target_feature], self._dataset
         )[0]
         self._register_artifact(target_feature_name, artifact)
-        input_results = preprocess_features(self._input_features, self._dataset)
+        input_results = preprocess_features(
+            self._input_features, self._dataset
+        )
         for (feature_name, data, artifact) in input_results:
             self._register_artifact(feature_name, artifact)
         self._output_vector = target_data
@@ -153,17 +159,25 @@ Pipeline(
 
     def _split_data(self) -> None:
         """
-        Splits the data into training and testing sets based on the split ratio.
+        Splits the data into training and
+        testing sets based on the split ratio.
         """
         split = self._split
         self._train_X = [
-            vector[: int(split * len(vector))] for vector in self._input_vectors
+            vector[: int(split * len(vector))] 
+            for vector in self._input_vectors
         ]
         self._test_X = [
-            vector[int(split * len(vector)) :] for vector in self._input_vectors
+            vector[int(split * len(vector)) :] 
+            for vector in self._input_vectors
         ]
-        self._train_y = self._output_vector[: int(split * len(self._output_vector))]
-        self._test_y = self._output_vector[int(split * len(self._output_vector)) :]
+        self._train_y = self._output_vector[
+            : int(split * len(self._output_vector))
+        ]
+        self._test_y = self._output_vector[
+            int(split * len(self._output_vector)) :
+        ]
+
 
     def _compact_vectors(self, vectors: List[np.array]) -> np.array:
         """

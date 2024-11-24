@@ -32,13 +32,16 @@ class KNearestNeighbors(Model):
         Args:
             k (int, optional): Number of neighbors. Defaults to 3.
             name (str, optional): Name of the model. Defaults to "test_model".
-            asset_path (str, optional): Path to store model artifacts. Defaults to "./tmp".
+            asset_path (str, optional): Path to store model artifacts.
+                Defaults to "./tmp".
             version (str, optional): Version of the model. Defaults to "0.1".
             **data: Additional data for initialization.
         """
-        super().__init__(name=name, asset_path=asset_path, version=version, **data)
+        super().__init__(
+            name=name, asset_path=asset_path, version=version, **data
+        )
         self.k = k
-        self._parameters['k'] = k
+        self._parameters["k"] = k
         self._type = "classification"
         self._model = KNeighborsClassifier(n_neighbors=k)
 
@@ -47,7 +50,8 @@ class KNearestNeighbors(Model):
         Fits the KNN model to the provided training data.
 
         Args:
-            observations (np.ndarray): Feature matrix of shape (n_samples, n_features).
+            observations (np.ndarray): Feature matrix of
+                shape (n_samples, n_features).
             ground_truth (np.ndarray): Target vector of shape (n_samples,).
         """
         X = np.asarray(observations)
@@ -63,7 +67,8 @@ class KNearestNeighbors(Model):
         Predicts the class of each observation.
 
         Args:
-            observations (np.ndarray): Feature matrix of shape (n_samples, n_features).
+            observations (np.ndarray): Feature matrix of
+                shape (n_samples, n_features).
 
         Returns:
             np.ndarray: Predicted class labels of shape (n_samples,).
@@ -78,7 +83,7 @@ class KNearestNeighbors(Model):
             directory (str): The directory where the model should be saved.
         """
         model_data = {
-            'parameters': self._parameters
+            "parameters": self._parameters
         }
         self._artifact.data = str(model_data).encode()
         self._artifact.save(directory)
@@ -89,14 +94,18 @@ class KNearestNeighbors(Model):
 
         Args:
             directory (str): The directory where the model is stored.
-            artifact_id (str): The unique ID of the model artifact to be loaded.
+            artifact_id (str): The unique ID of the model
+                artifact to be loaded.
         """
         loaded_artifact = Artifact.load(directory, artifact_id)
         model_data = eval(loaded_artifact.data.decode())
-        self._parameters = model_data['parameters']
-        self.k = self._parameters.get('k', 3)
+        self._parameters = model_data["parameters"]
+        self.k = self._parameters.get("k", 3)
         self._model = KNeighborsClassifier(n_neighbors=self.k)
-        if "observations" in self._parameters and "ground_truth" in self._parameters:
+        if (
+            "observations" in self._parameters
+            and "ground_truth" in self._parameters
+        ):
             self._model.fit(
                 self._parameters["observations"],
                 self._parameters["ground_truth"]

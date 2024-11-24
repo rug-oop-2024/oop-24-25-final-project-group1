@@ -35,7 +35,9 @@ class LassoRegressionModel(Model):
             version (str): Version of the model. Defaults to "0.1"
             **data: Additional parameters for the model
         """
-        super().__init__(name=name, asset_path=asset_path, version=version, **data)
+        super().__init__(
+            name=name, asset_path=asset_path, version=version, **data
+        )
         self._model = SKLasso(alpha=alpha)
         self._parameters = {
             "hyperparameters": self._model.get_params()
